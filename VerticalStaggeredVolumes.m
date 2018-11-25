@@ -1,0 +1,2 @@
+classdef VerticalStaggeredVolumes < StaggeredVolumes
+end
