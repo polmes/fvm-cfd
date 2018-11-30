@@ -56,6 +56,34 @@ classdef StructuredMeshGenerator < MeshGenerator
             
             cn = [BL(:)';BR(:)';TR(:)';TL(:)'];
         end
+        
+        function rel = REL(this)
+            SIZE = [this.xpoints-1,this.ypoints-1];
+            
+            [IL1,IL2] = meshgrid(1:SIZE(1),1:SIZE(2));
+            
+            % Periodic boundary conditions, therefore relation matrix
+            % points accordingly and there is no need for a HALO
+            
+            NORTH1 = IL1;
+            NORTH2 = mod(IL2,SIZE(2))+1;
+            
+            WEST1 = mod(IL1-2,SIZE(1))+1;
+            WEST2 = IL2;
+            
+            SOUTH1 = IL1;
+            SOUTH2 = mod(IL2-2,SIZE(2))+1;
+            
+            EAST1 = mod(IL1,SIZE(1))+1;
+            EAST2 = IL2;
+            
+            NORTH = sub2ind(SIZE,NORTH1,NORTH2);
+            WEST = sub2ind(SIZE,WEST1,WEST2);
+            SOUTH = sub2ind(SIZE,SOUTH1,SOUTH2);
+            EAST = sub2ind(SIZE,EAST1,EAST2);
+            
+            rel = [NORTH(:)';EAST(:)';SOUTH(:)';WEST(:)'];
+        end
     end
 end
 
