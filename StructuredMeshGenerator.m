@@ -1,5 +1,11 @@
 classdef StructuredMeshGenerator < MeshGenerator
     
+    % COOR: 2xNPOINTS matrix with the 2 coordinates of each point in the
+    % mesh
+    
+    % CN: 4xNVOLUMES matrix with the 4 INDICES of each volume, starting by
+    % the bottom left corner and following a counter-clockwise direction
+    
     properties
         xpoints;
         ypoints;
@@ -21,7 +27,7 @@ classdef StructuredMeshGenerator < MeshGenerator
             yp = linspace(this.yrange(1),this.yrange(2),this.ypoints);
             
             [X,Y] = meshgrid(xp,yp);
-            coor = [X(:),Y(:)];
+            coor = [X(:)';Y(:)'];
         end
         
         function cn = CN(this)
@@ -48,7 +54,7 @@ classdef StructuredMeshGenerator < MeshGenerator
             TR = sub2ind(SIZE,TRx,TRy);
             TL = sub2ind(SIZE,TLx,TLy);
             
-            cn = [BL(:),BR(:),TR(:),TL(:)];
+            cn = [BL(:)';BR(:)';TR(:)';TL(:)'];
         end
     end
 end
