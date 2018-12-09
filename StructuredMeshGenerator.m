@@ -31,9 +31,9 @@ classdef StructuredMeshGenerator < MeshGenerator
         end
         
         function cn = CN(this)
-            SIZE = [this.xpoints,this.ypoints];
+            SIZE = [this.ypoints,this.xpoints];
             
-            [IL1,IL2] = meshgrid(1:this.xpoints,1:this.ypoints);
+            [IL2,IL1] = meshgrid(1:this.ypoints,1:this.xpoints);
             
             % Corners
             BLx = IL1(1:end-1,1:end-1);
@@ -49,11 +49,11 @@ classdef StructuredMeshGenerator < MeshGenerator
             TLy = IL2(1:end-1,2:end);
             
             % Linear corners
-            BL = sub2ind(SIZE,BLx,BLy);
-            BR = sub2ind(SIZE,BRx,BRy);
-            TR = sub2ind(SIZE,TRx,TRy);
-            TL = sub2ind(SIZE,TLx,TLy);
-            
+            BL = sub2ind(SIZE,BLy,BLx);
+            BR = sub2ind(SIZE,BRy,BRx);
+            TR = sub2ind(SIZE,TRy,TRx);
+            TL = sub2ind(SIZE,TLy,TLx);
+			
             cn = [BL(:)';BR(:)';TR(:)';TL(:)'];
         end
         
