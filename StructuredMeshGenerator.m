@@ -66,6 +66,8 @@ classdef StructuredMeshGenerator < MeshGenerator
             % points accordingly and there is no need for a HALO
             
             NORTH1 = IL1;
+			NORTH2 = mod(IL2,SIZE(2))+1;
+
             WEST1 = mod(IL1-2,SIZE(1))+1;
             WEST2 = IL2;
             
@@ -82,6 +84,10 @@ classdef StructuredMeshGenerator < MeshGenerator
             
             rel = [NORTH(:)';EAST(:)';SOUTH(:)';WEST(:)'];
         end
+
+		function mesh=genMesh(this)
+			mesh=Mesh(this.CN(),this.COOR(),this.REL())
+		end
     end
 end
 
