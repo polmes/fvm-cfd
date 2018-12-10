@@ -26,14 +26,14 @@ classdef StructuredMeshGenerator < MeshGenerator
             xp = linspace(this.xrange(1),this.xrange(2),this.xpoints);
             yp = linspace(this.yrange(1),this.yrange(2),this.ypoints);
             
-            [X,Y] = meshgrid(xp,yp);
+            [X,Y] = ndgrid(xp,yp);
             coor = [X(:)';Y(:)'];
         end
         
         function cn = CN(this)
-            SIZE = [this.ypoints,this.xpoints];
+            SIZE = [this.xpoints,this.ypoints];
             
-            [IL2,IL1] = meshgrid(1:this.ypoints,1:this.xpoints);
+            [IL1,IL2] = ndgrid(1:this.xpoints,1:this.ypoints);
             
             % Corners
             BLx = IL1(1:end-1,1:end-1);
@@ -49,10 +49,10 @@ classdef StructuredMeshGenerator < MeshGenerator
             TLy = IL2(1:end-1,2:end);
             
             % Linear corners
-            BL = sub2ind(SIZE,BLy,BLx);
-            BR = sub2ind(SIZE,BRy,BRx);
-            TR = sub2ind(SIZE,TRy,TRx);
-            TL = sub2ind(SIZE,TLy,TLx);
+            BL = sub2ind(SIZE,BLx,BLy);
+            BR = sub2ind(SIZE,BRx,BRy);
+            TR = sub2ind(SIZE,TRx,TRy);
+            TL = sub2ind(SIZE,TLx,TLy);
 			
             cn = [BL(:)';BR(:)';TR(:)';TL(:)'];
         end
@@ -60,7 +60,7 @@ classdef StructuredMeshGenerator < MeshGenerator
         function rel = REL(this)
             SIZE = [this.xpoints-1,this.ypoints-1];
             
-            [IL1,IL2] = meshgrid(1:SIZE(1),1:SIZE(2));
+            [IL1,IL2] = ndgrid(1:SIZE(1),1:SIZE(2));
             
             % Periodic boundary conditions, therefore relation matrix
             % points accordingly and there is no need for a HALO
@@ -85,8 +85,17 @@ classdef StructuredMeshGenerator < MeshGenerator
             rel = [NORTH(:)';EAST(:)';SOUTH(:)';WEST(:)'];
         end
 
+		function idx= IDX(this)
+			sz=[3,this.xpoints-1,this.ypoints-1];
+			[xx,yy]=ndgrid(1:sz(2),1:sz(3));
+			uidx=sub2ind(sz,1*ones(size(xx)),xx,yy)
+			vidx=sub2ind(sz,2*ones(size(xx)),xx,yy);
+			pidx=sub2ind(sz,3*ones(size(xx)),xx,yy);
+			idx=[uidx(:)';vidx(:)';pidx(:)']
+		end
+
 		function mesh=genMesh(this)
-			mesh=Mesh(this.CN(),this.COOR(),this.REL())
+			mesh=Mesh(this.CN(),this.COOR(),this.REL(),this.IDX())
 		end
     end
 end
