@@ -7,10 +7,6 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 		%  2
 		%5 1 3
 		%  4
-		nodes%6*NV
-		% 5 6
-		% 3 4
-		% 1 2
 	end
 
 	methods
@@ -29,22 +25,42 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 this.uidx
 		end
 		
-		function Kf = calcKf(this,v,MSH)
-			Kf=sparse(size(MSH.REL,2)*3,size(MSH.REL,2)*3)
-			for el=1:size(MSH.REL,2)
+		function Kc = calcKc(this,v,MSH)
+			Kc=sparse(size(this.uidx,2)*3,size(this.uidx,2)*3);
+			for el=1:size(this.uidx,2)
 				
-				nv=this.vidx(:,el)
-				nu=this.uidx(:,el)
-				dx=MSH.dx([el,MSH.REL(1,el)]) %2*NV
+				nv=this.vidx(:,el);
+				nu=this.uidx(:,el);
+				dx=MSH.dx([MSH.REL(3,el),el,MSH.REL(1,el)]); %3*NV
 				dy=MSH.dy([MSH.REL(1,el),el,...
-				   MSH.REL(4,el),MSH.REL(4,MSH.REL(1,el))]) %4*NV
+				   MSH.REL(4,el),MSH.REL(4,MSH.REL(1,el))]); %4*NV
 
-				Fn=(v(nv(2))+v(nv(1)))*dx(1)/2
-				Fs=(v(nv(4))+v(nv(1)))*dx(2)/2
-				Fe=(v(nu(1))*dy(1)+v(nu(2))*dy(2))/2
-				Fw=(v(nu(4))*dy(4)+v(nu(3))*dy(3))/2
-				Kf(el,nv(1))=Fe-Fw+Fn-Fs
-				Kf(el,nv(2:end))=[Fe -Fw Fn -Fs]
+				Fn=(v(nv(2))+v(nv(1)))*((dx(2)+dx(3))/2)/2;
+				Fs=(v(nv(4))+v(nv(1)))*((dx(1)+dx(2))/2)/2;
+				Fe=(v(nu(1))*dy(1)+v(nu(2))*dy(2))/2;
+				Fw=(v(nu(4))*dy(4)+v(nu(3))*dy(3))/2;
+				Kc(this.vidx(1,el),nv(1))=Fn+Fe-Fs-Fw;
+				Kc(this.vidx(1,el),nv(2:end))=[Fn Fe -Fs -Fw];
+			end
+		end
+
+		function Kd = calcKd(this,v,MSH)
+			Kd=sparse(size(this.uidx,2)*3,size(this.uidx,2)*3);
+			for el=1:size(this.uidx,2)
+				
+				nv=this.vidx(:,el);
+				nu=this.uidx(:,el);
+				dx=MSH.dx([el,MSH.REL(1,el),MSH.REL(2,el),MSH.REL(3,el),MSH.REL(4,el)]); %5*NV
+				dy=MSH.dy([MSH.REL(1,el),el,...
+				   MSH.REL(4,el),MSH.REL(4,MSH.REL(1,el))]); %4*NV
+
+				kn=(dx(1)+dx(2))/(dy(4)+dy(1))
+				ks=(dx(1)+dx(4))/(dy(2)+dy(3))
+				ke=(dy(1)+dy(2))/(dx(3)+dx(1))
+				kw=(dy(3)+dy(4))/(dx(5)+dx(1))
+
+				Kd(this.vidx(1,el),nv(1))=-kn-ke+ks+kw
+				Kd(this.vidx(1,el),nv(2:end))=[kn ke -ks -kw]
 			end
 		end
 	end
