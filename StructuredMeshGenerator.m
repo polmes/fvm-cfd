@@ -88,14 +88,14 @@ classdef StructuredMeshGenerator < MeshGenerator
 		function idx= IDX(this)
 			sz=[3,this.xpoints-1,this.ypoints-1];
 			[xx,yy]=ndgrid(1:sz(2),1:sz(3));
-			uidx=sub2ind(sz,1*ones(size(xx)),xx,yy)
+			uidx=sub2ind(sz,1*ones(size(xx)),xx,yy);
 			vidx=sub2ind(sz,2*ones(size(xx)),xx,yy);
 			pidx=sub2ind(sz,3*ones(size(xx)),xx,yy);
-			idx=[uidx(:)';vidx(:)';pidx(:)']
+			idx=[uidx(:)';vidx(:)';pidx(:)'];
 		end
 
 		function mesh=genMesh(this)
-			mesh=Mesh(this.CN(),this.COOR(),this.REL(),this.IDX())
+			mesh=Mesh(this.CN(),this.COOR(),this.REL(),this.IDX());
 		end
     end
 end
