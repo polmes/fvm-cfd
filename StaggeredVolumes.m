@@ -1,2 +1,2 @@
-classdef StaggeredVolumes < Volumes
+classdef StaggeredVolumes < handle
 end
