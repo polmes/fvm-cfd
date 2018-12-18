@@ -38,8 +38,8 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 				Fs=(v(nv(4))+v(nv(1)))*((dx(1)+dx(2))/2)/2;
 				Fe=(v(nu(1))*dy(1)+v(nu(2))*dy(2))/2;
 				Fw=(v(nu(4))*dy(4)+v(nu(3))*dy(3))/2;
-				Kc(this.vidx(1,el),nv(1))=1/2 * (Fn+Fe-Fs-Fw);
-				Kc(this.vidx(1,el),nv(2:end))=1/2 * [Fn Fe -Fs -Fw];
+				Kc(nv(1),nv(1))=1/2 * (Fn+Fe-Fs-Fw);
+				Kc(nv(1),nv(2:end))=1/2 * [Fn Fe -Fs -Fw];
 			end
 		end
 
@@ -58,8 +58,8 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 				ke=(dy(1)+dy(2))/(dx(3)+dx(1));
 				kw=(dy(3)+dy(4))/(dx(5)+dx(1));
 
-				Kd(this.vidx(1,el),nv(1))=-kn-ke+ks+kw;
-				Kd(this.vidx(1,el),nv(2:end))=[kn ke -ks -kw];
+				Kd(nv(1),nv(1))=-kn-ke-ks-kw;
+				Kd(nv(1),nv(2:end))=[kn ke ks kw];
 			end
 		end
 	end

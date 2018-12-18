@@ -38,8 +38,8 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 				Fw=(v(nu(5))+v(nu(1)))*((dy(1)+dy(2))/2)/2;
 				Fn=(v(nv(1))*dx(1)+v(nv(4))*dx(4))/2;
 				Fs=(v(nv(2))*dx(2)+v(nv(3))*dx(3))/2;
-				Kc(this.uidx(1,el),nu(1))=1/2 * (Fn+Fe-Fs-Fw);
-				Kc(this.uidx(1,el),nu(2:end))=1/2 * [Fn Fe -Fs -Fw];
+				Kc(nu(1),nu(1))=1/2 * (Fn+Fe-Fs-Fw);
+				Kc(nu(1),nu(2:end))=1/2 * [Fn Fe -Fs -Fw];
 			end
 		end
 
@@ -58,8 +58,8 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 				ke=(dy(3)+dy(1))/(dx(2)+dx(1));
 				kw=(dy(5)+dy(1))/(dx(4)+dx(3));
 
-				Kd(this.uidx(1,el),nu(1))=-kn-ke+ks+kw;
-				Kd(this.uidx(1,el),nu(2:end))=[kn ke -ks -kw];
+				Kd(nu(1),nu(1))=-kn-ke-ks-kw;
+				Kd(nu(1),nu(2:end))=[kn ke ks kw];
 			end
 		end
 	end
