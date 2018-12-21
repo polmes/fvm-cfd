@@ -11,7 +11,7 @@ classdef GenericStaggeredVolumes < handle
         dp;
     end
     methods
-        function C = calcC(this,uv)
+        function C = calcC(this,uv,~)
             C=zeros(size(this.tidx,2)*3,1);
             for el=1:size(this.tidx,2)
                 nt=this.tidx(:,el);
@@ -32,7 +32,7 @@ classdef GenericStaggeredVolumes < handle
             end
         end
         
-        function D = calcD(this,uv)
+        function D = calcD(this,uv,~)
             D=zeros(size(this.tidx,2)*3,1);
 			for el=1:size(this.tidx,2)
                 nt=this.tidx(:,el);
