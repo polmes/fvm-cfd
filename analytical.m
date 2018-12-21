@@ -29,8 +29,7 @@ for k = 1:length(NN)
 	Ny = NN(k);
 	
 	mesh = StructuredMeshGenerator(X, Y, Nx + 1, Ny + 1).genMesh();
-	vsv = VerticalStaggeredVolumes(mesh);
-	hsv = HorizontalStaggeredVolumes(mesh);
+	sv = StaggeredVolumes(mesh);
 
 	% Coordinates
 
@@ -71,19 +70,13 @@ for k = 1:length(NN)
 
 	vol = repelem(mesh.dx .* mesh.dy, 3).';
 
-	% Numerical Convective Term
-	Kch = hsv.calcKc(v, mesh);
-	Kcv = vsv.calcKc(v, mesh);
-	Cn = (Kch + Kcv) * v ./ vol;
-	
-	% Numerical Diffusive Term
-	Kdh = hsv.calcKd(v, mesh);
-	Kdv = vsv.calcKd(v, mesh);
-	Dn = (Kdh + Kdv) * v ./ vol;
+	% Numerical Terms
+	Cn = sv.calcC(v) ./ vol;
+	Dn = sv.calcD(v) ./ vol;
 
 	% Errors
-	errc(k) = norm((Cn - Ca).*vol);
-	errd(k) = norm((Dn - Da).*vol);
+	errc(k) = sqrt(dot((Cn - Ca).^2,vol));
+	errd(k) = sqrt(dot((Dn - Da).^2,vol));
 	disp(['ERROR_CONV: ' num2str(errc(k))]);
 	disp(['ERROR_DIFF: ' num2str(errd(k))]);
 
