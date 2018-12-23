@@ -20,7 +20,7 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 		end
 		
 		function c = convective(this, mesh, uv)
-			u = this.getVelocities(uv(1, :), this.uidx);
+			U = this.getVelocities(uv(1, :), this.uidx);
 			
 			Fn = uv(2, this.vidx(1, :)) .* mesh.dx(this.vidx(1, :)) + uv(2, this.vidx(4, :)) .* mesh.dx(this.vidx(4, :));
 			Fs = uv(2, this.vidx(2, :)) .* mesh.dx(this.vidx(2, :)) + uv(2, this.vidx(3, :)) .* mesh.dx(this.vidx(3, :));
@@ -29,7 +29,7 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 			F = 1/2 * [Fn; Fe; -Fs; -Fw];
 
 % 			c = 1/4 * (ue .* Fe - uw .* Fw + un .* Fn - us .* Fs);
-			c = sum(u .* F, 1);
+			c = sum(U .* F, 1);
 		end
 	end
 end

@@ -9,7 +9,7 @@ classdef StaggeredVolumes < handle % < Volumes
 					mesh.rel  ];
 		end
 		
-		function u = getVelocities(~, v, idx)
+		function U = getVelocities(~, v, idx)
 % 			uu = reshape(v(idx(2:5, :)), 4, []);
 % 			ux = ones(4, 1) * v(1, idx(1, :));
 % 			u = 1/2 * (uu + ux);
@@ -19,7 +19,7 @@ classdef StaggeredVolumes < handle % < Volumes
 			us = v(idx(1, :)) + v(idx(4, :));
 			uw = v(idx(1, :)) + v(idx(5, :));
 			
-			u = 1/2 * [un; ue; us; uw];
+			U = 1/2 * [un; ue; us; uw];
 		end
 	end
 end
