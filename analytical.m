@@ -20,7 +20,7 @@ diff2= laplacian(uv(2),[x y]);
 L = 1;
 X = [0 L];
 Y = [0 L];
-NN = round(logspace(0, 2, 10));
+NN = round(logspace(log10(3), 2, 10));
 errc = zeros(1, length(NN));
 errd = zeros(1, length(NN));
 
@@ -29,19 +29,17 @@ for k = 1:length(NN)
 	Nx = NN(k);
 	Ny = NN(k);
 	
-	mesh = StructuredMeshGenerator(X, Y, Nx + 1, Ny + 1).genMesh();
-	vsv = VerticalStaggeredVolumes(mesh);
-	hsv = HorizontalStaggeredVolumes(mesh);
+	mesh = StructuredMesh(X, Y, Nx, Ny);
 
 	% Coordinates
 
 	% Horizontal Staggered
-	xh = mean([mesh.COOR(1, mesh.CN(2, :)); mesh.COOR(1, mesh.CN(3, :))]);
-	yh = mean([mesh.COOR(2, mesh.CN(2, :)); mesh.COOR(2, mesh.CN(3, :))]);
+	xh = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(2, :))]);
+	yh = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(2, :))]);
 
 	% Vertical Staggered
-	xv = mean([mesh.COOR(1, mesh.CN(3, :)); mesh.COOR(1, mesh.CN(4, :))]);
-	yv = mean([mesh.COOR(2, mesh.CN(3, :)); mesh.COOR(2, mesh.CN(4, :))]);
+	xv = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(4, :))]);
+	yv = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(4, :))]);
 
 	% Centered
 	xp = xv;
@@ -50,41 +48,38 @@ for k = 1:length(NN)
 	% Analytical convective term
 	Ch = double(subs(conv1, {x, y}, {xh, yh}));
 	Cv = double(subs(conv2, {x, y}, {xv, yv}));
-	Ca = zeros(3 * Nx * Ny, 1);
-	Ca(1:3:end) = Ch;
-	Ca(2:3:end) = Cv;
+	Ca = zeros(2, Nx * Ny);
+	Ca(1,:) = Ch;
+	Ca(2,:) = Cv;
 
 	% Analytical diffusive term
 	Dh = double(subs(diff1, {x, y}, {xh, yh}));
 	Dv = double(subs(diff2, {x, y}, {xv, yv}));
-	Da = zeros(3 * Nx * Ny, 1);
-	Da(1:3:end) = Dh;
-	Da(2:3:end) = Dv;
+	Da = zeros(2,Nx * Ny);
+	Da(1,:) = Dh;
+	Da(2,:) = Dv;
 
 	% Analytic velocity and pressure fields
 	uvh = double(subs(uv, {x, y}, {xh, yh})); uh = uvh(1, :); % u
 	uvv = double(subs(uv, {x, y}, {xv, yv})); vv = uvv(2, :); % v
 	pp = double(subs(p, {x, y}, {xp, yp}));
-	v = zeros(3 * Nx * Ny, 1);
-	v(1:3:end) = uh;
-	v(2:3:end) = vv;
-	v(3:3:end) = pp;
+	v = zeros(2,Nx * Ny);
+	v(1,:) = uh;
+	v(2,:) = vv;
 
-	vol = repelem(mesh.dx .* mesh.dy, 3).';
+	vol = reshape(repelem(mesh.dx .* mesh.dy, 2).',[2 Nx*Ny]);
 
 	% Numerical Convective Term
-	Kch = hsv.calcKc(v, mesh);
-	Kcv = vsv.calcKc(v, mesh);
-	Cn = (Kch + Kcv) * v ./ vol;
+
+	Cn = mesh.convective(v) ./ vol;
 	
 	% Numerical Diffusive Term
-	Kdh = hsv.calcKd(v, mesh);
-	Kdv = vsv.calcKd(v, mesh);
-	Dn = (Kdh + Kdv) * v ./ vol;
+
+	%Dn = mesh.diffusive(v) ./ vol;
 
 	% Errors
-	errc(k) = norm((Cn - Ca).*vol);
-	errd(k) = norm((Dn - Da).*vol);
+	errc(k) = sqrt(sum(sum((Cn - Ca).^2.*vol)));
+	%errd(k) = sqrt(sum(sum((Dn - Da).^2.*vol)));
 	disp(['ERROR_CONV: ' num2str(errc(k))]);
 	disp(['ERROR_DIFF: ' num2str(errd(k))]);
 
@@ -94,12 +89,14 @@ close(progress);
 
 %% Output data
 figure;
+set(gca, 'XScale', 'log');
+set(gca, 'YScale', 'log');
 hold('on');
 loglog(L./NN, errc);
-loglog(L./NN, errd);
+%loglog(L./NN, errd);
 
-ind = find(err ~= 0);
+ind = find(errc ~= 0);
 pc = polyfit(log10(L./NN(ind)), log10(errc(ind)), 1);
 pd = polyfit(log10(L./NN(ind)), log10(errd(ind)), 1);
 disp(['Slope Convective: ' num2str(pc(1))]);
-disp(['Slope Diffusive: ' num2str(pd(1))]);
+disp(['Slope Diffusive:  ' num2str(pd(1))]);
