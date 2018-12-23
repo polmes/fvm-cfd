@@ -1,4 +1,4 @@
-classdef HorizontalStaggeredVolumes < StaggeredVolumes
+classdef HorizontalStaggeredVolumes
 	properties
 		vidx;%4*NV
 		% 4 1
