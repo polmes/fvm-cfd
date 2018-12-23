@@ -5,7 +5,7 @@ nu = 1.48e-5; % viscosity [m^2/s]
 F = 1; % exp(-8 * pi^2 * nu * t);
 syms x y;
 uv = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
-	      -cos(2 * pi * y) * sin(2 * pi * x) ];
+          -cos(2 * pi * y) * sin(2 * pi * x) ];
 p = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
 
 % Analytic convective term
@@ -17,10 +17,12 @@ diff1= laplacian(uv(1),[x y]);
 diff2= laplacian(uv(2),[x y]);
 
 % Init numeric terms
+
 L = 1;
 X = [0 L];
 Y = [0 L];
 NN = round(logspace(log10(3), 2, 10));
+
 errc = zeros(1, length(NN));
 errd = zeros(1, length(NN));
 
@@ -55,6 +57,7 @@ for k = 1:length(NN)
 	% Analytical diffusive term
 	Dh = double(subs(diff1, {x, y}, {xh, yh}));
 	Dv = double(subs(diff2, {x, y}, {xv, yv}));
+
 	Da = zeros(2,Nx * Ny);
 	Da(1,:) = Dh;
 	Da(2,:) = Dv;
@@ -75,11 +78,12 @@ for k = 1:length(NN)
 	
 	% Numerical Diffusive Term
 
-	%Dn = mesh.diffusive(v) ./ vol;
+	Dn = mesh.diffusive(v) ./ vol;
 
 	% Errors
 	errc(k) = sqrt(sum(sum((Cn - Ca).^2.*vol)));
-	%errd(k) = sqrt(sum(sum((Dn - Da).^2.*vol)));
+	errd(k) = sqrt(sum(sum((Dn - Da).^2.*vol)));
+
 	disp(['ERROR_CONV: ' num2str(errc(k))]);
 	disp(['ERROR_DIFF: ' num2str(errd(k))]);
 
@@ -93,7 +97,7 @@ set(gca, 'XScale', 'log');
 set(gca, 'YScale', 'log');
 hold('on');
 loglog(L./NN, errc);
-%loglog(L./NN, errd);
+loglog(L./NN, errd);
 
 ind = find(errc ~= 0);
 pc = polyfit(log10(L./NN(ind)), log10(errc(ind)), 1);

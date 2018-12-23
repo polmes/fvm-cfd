@@ -13,12 +13,12 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 		function this = VerticalStaggeredVolumes(mesh)
 			this.vidx = this.getNeighbors(mesh);
 			
-			this.uidx = [ mesh.rel(1, :)			  ;
-					      1:mesh.NV					  ;
-						  mesh.rel(4, :)			  ;
-						  mesh.rel(1, mesh.rel(4, :)) ];
+			this.uidx = [ mesh.rel(1, :)               ;
+			              1:mesh.NV                    ;
+			              mesh.rel(4, :)               ;
+			              mesh.rel(1, mesh.rel(4, :)) ];
 		end
-		
+
 		function c = convective(this, mesh, uv)
 			V = this.getVelocities(uv(2, :), this.vidx);
 			
@@ -30,6 +30,7 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 			
 % 			c = 1/4 * (ue .* Fe - uw .* Fw + un .* Fn - us .* Fs);
 			c = sum(V .* F, 1);
+
 		end
 	end
 end

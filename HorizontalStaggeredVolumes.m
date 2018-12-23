@@ -13,10 +13,10 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 		function this = HorizontalStaggeredVolumes(mesh)
 			this.uidx = this.getNeighbors(mesh);
 			
-			this.vidx = [ mesh.rel(2, :)			  ;
-					      mesh.rel(2, mesh.rel(3, :)) ;
-						  mesh.rel(3, :)			  ;
-						  1:mesh.NV					  ];
+			this.vidx = [ mesh.rel(2, :)              ;
+			              mesh.rel(2, mesh.rel(3, :)) ;
+			              mesh.rel(3, :)              ;
+			              1:mesh.NV                	 ];
 		end
 		
 		function c = convective(this, mesh, uv)
@@ -30,6 +30,7 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 
 % 			c = 1/4 * (ue .* Fe - uw .* Fw + un .* Fn - us .* Fs);
 			c = sum(U .* F, 1);
+
 		end
 	end
 end
