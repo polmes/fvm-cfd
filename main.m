@@ -1,10 +1,9 @@
+% Init
 L = 1;
 X = [0 L];
 Y = [0 L];
 Nx = 3;
 Ny = 3;
-
-% Init
 mesh = StructuredMesh(X, Y, Nx, Ny);
 
 % Manufactured solution setup
@@ -39,8 +38,8 @@ v(1:3:end) = uh;
 v(2:3:end) = vv;
 v(3:3:end) = pp;
 
-% Test variable
+% Test variables
 test = [v(1:3:end).'; v(2:3:end).'];
 
-% Test
+% Convective
 C = mesh.convective(test);
