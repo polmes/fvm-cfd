@@ -77,5 +77,6 @@ function generateMesh(this, x, y, Nx, Ny)
 	function getDeltas(this)
 		this.dx = sqrt(sum((this.coor(:, this.cn(1, :)) - this.coor(:, this.cn(4, :))).^2));
 		this.dy = sqrt(sum((this.coor(:, this.cn(1, :)) - this.coor(:, this.cn(2, :))).^2));
+		this.vol = this.dx .* this.dy;
 	end
 end
