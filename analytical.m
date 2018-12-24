@@ -88,16 +88,20 @@ close(progress);
 
 %% POST
 
+% Grid size
+h = L ./ NN;
+
 % Plot
 figure;
 hold('on');
-loglog(L ./ NN, errc);
-% loglog(L ./ NN, errd);
+loglog(h, errc);
+% loglog(h, errd);
+loglog(h, h.^2);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 grid('on');
 xlabel('Grid Size', 'Interpreter', 'latex', 'FontSize', 15);
 ylabel('Error', 'Interpreter', 'latex', 'FontSize', 15);
-% legend('Convetive', 'Diffusive');
+legend('Convetive', 'h^2'); % 'Diffusive'
 set(findall(gca, 'Type', 'Line'), 'LineWidth', 1);
 set(gca, 'FontSize', 12);
 set(gcf, 'Units', 'centimeters', 'Position', [0 0 21 14]);
@@ -105,7 +109,7 @@ set(gcf, 'Units', 'centimeters', 'Position', [0 0 21 14]);
 % Slopes
 indc = find(errc ~= 0);
 % indd = find(errd ~= 0);
-pc = polyfit(log10(L ./ NN(indc)), log10(errc(indc)), 1);
-% pd = polyfit(log10(L ./ NN(indd)), log10(errd(indd)), 1);
+pc = polyfit(log10(h(indc)), log10(errc(indc)), 1);
+% pd = polyfit(log10(h(indd)), log10(errd(indd)), 1);
 disp(['Slope Convective: ' num2str(pc(1))]);
 % disp(['Slope Diffusive:  ' num2str(pd(1))]);
