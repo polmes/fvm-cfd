@@ -43,12 +43,12 @@ for k = 1:length(NN)
 	mesh = SquareMesh(XY, NN(k));
 
 	% Horizontal staggered
-	xh = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(2, :))]);
-	yh = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(2, :))]);
+	xh = mean([mesh.coor(1, mesh.cn(2, :)); mesh.coor(1, mesh.cn(4, :))]);
+	yh = mean([mesh.coor(2, mesh.cn(2, :)); mesh.coor(2, mesh.cn(4, :))]);
 
 	% Vertical staggered
-	xv = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(4, :))]);
-	yv = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(4, :))]);
+	xv = mean([mesh.coor(1, mesh.cn(3, :)); mesh.coor(1, mesh.cn(4, :))]);
+	yv = mean([mesh.coor(2, mesh.cn(3, :)); mesh.coor(2, mesh.cn(4, :))]);
 
 	% Centered
 	xp = xv;
