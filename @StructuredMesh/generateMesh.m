@@ -43,7 +43,7 @@ function generateMesh(this, x, y, Nx, Ny)
 		TR = sub2ind(SIZE,TRx,TRy);
 		TL = sub2ind(SIZE,TLx,TLy);
 
-		this.cn = uint32([TR(:).'; BR(:).'; BL(:).'; TL(:).']);
+		this.cn = uint32([BL(:).'; BR(:).'; TL(:).'; TR(:).']);
 	end
 
 	function getNeighbors(this)
@@ -75,7 +75,8 @@ function generateMesh(this, x, y, Nx, Ny)
 	end
 
 	function getDeltas(this)
-		this.dx = sqrt(sum((this.coor(:, this.cn(1, :)) - this.coor(:, this.cn(4, :))).^2));
-		this.dy = sqrt(sum((this.coor(:, this.cn(1, :)) - this.coor(:, this.cn(2, :))).^2));
+		this.dx = sqrt(sum((this.coor(:, this.cn(3, :)) - this.coor(:, this.cn(4, :))).^2));
+		this.dy = sqrt(sum((this.coor(:, this.cn(2, :)) - this.coor(:, this.cn(4, :))).^2));
+		this.vol = this.dx .* this.dy;
 	end
 end
