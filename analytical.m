@@ -6,17 +6,23 @@ rho = 1.225; % density [kg/m^3]
 nu = 1.48e-5; % viscosity [m^2/s]
 F = 1; % exp(-8 * pi^2 * nu * t);
 syms x y;
-uvf = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
+uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
           -cos(2 * pi * y) * sin(2 * pi * x) ];
-pf = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
+pa = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
+uvf = matlabFunction(uva);
+pf = matlabFunction(pa);
 
 % Analytical convective term
-conv1 = divergence(uvf(1) * uvf, [x y]);
-conv2 = divergence(uvf(2) * uvf, [x y]);
+conv1a = divergence(uva(1) * uva, [x y]);
+conv2a = divergence(uva(2) * uva, [x y]);
+conv1f = matlabFunction(conv1a);
+conv2f = matlabFunction(conv2a);
 
 % Analytical diffusive term
-diff1 = laplacian(uvf(1),[x y]);
-diff2 = laplacian(uvf(2),[x y]);
+diff1a = laplacian(uva(1),[x y]);
+diff2a = laplacian(uva(2),[x y]);
+diff1f = matlabFunction(diff1a);
+diff2f = matlabFunction(diff2a);
 
 % Numerical parameters
 L = 1;
@@ -49,22 +55,22 @@ for k = 1:length(NN)
 	yp = yh;
 
 	% Analytical convective term
-	Ch = double(subs(conv1, {x, y}, {xh, yh}));
-	Cv = double(subs(conv2, {x, y}, {xv, yv}));
+	Ch = conv1f(xh, yh);
+	Cv = conv2f(xv, yv);
 	Ca = [Ch; Cv];
 
 	% Analytical diffusive term
-	Dh = double(subs(diff1, {x, y}, {xh, yh}));
-	Dv = double(subs(diff2, {x, y}, {xv, yv}));
+	Dh = diff1f(xh, yh);
+	Dv = diff2f(xv, yv);
 	Da = [Dh; Dv];
 
 	% Velocity field
-	uvh = double(subs(uvf, {x, y}, {xh, yh})); uh = uvh(1, :); % u
-	uvv = double(subs(uvf, {x, y}, {xv, yv})); vv = uvv(2, :); % v
+	uvh = uvf(xh, yh); uh = uvh(1, :); % u
+	uvv = uvf(xv, yv); vv = uvv(2, :); % v
 	uv = [uh; vv];
 	
 	% Pressure field
-	p = double(subs(pf, {x, y}, {xp, yp}));	
+	p = pf(xp, yp);
 
 	% Numerical convective term
 	Cn = mesh.convective(uv) ./ mesh.vol;
@@ -91,11 +97,15 @@ close(progress);
 % Grid size
 h = L ./ NN;
 
+% Remove outliers
+indc = find(errc > 1e-6);
+% indd = find(errd > 1e-6);
+
 % Plot
 figure;
 hold('on');
-loglog(h, errc);
-% loglog(h, errd);
+loglog(h(indc), errc(indc));
+% loglog(h(indd), errd(indd));
 loglog(h, h.^2);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 grid('on');
@@ -107,8 +117,6 @@ set(gca, 'FontSize', 12);
 set(gcf, 'Units', 'centimeters', 'Position', [0 0 21 14]);
 
 % Slopes
-indc = find(errc ~= 0);
-% indd = find(errd ~= 0);
 pc = polyfit(log10(h(indc)), log10(errc(indc)), 1);
 % pd = polyfit(log10(h(indd)), log10(errd(indd)), 1);
 disp(['Slope Convective: ' num2str(pc(1))]);
