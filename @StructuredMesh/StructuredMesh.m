@@ -24,5 +24,10 @@ classdef StructuredMesh < Mesh
 			C = [ this.hsv.convective(this, uv) ;
 				  this.vsv.convective(this, uv) ];
 		end
+		
+		function D = diffusive(this, uv)
+			D = [ this.hsv.diffusive(this, uv) ;
+				  this.vsv.diffusive(this, uv) ];
+		end
 	end
 end

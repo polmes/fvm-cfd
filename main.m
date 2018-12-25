@@ -17,13 +17,13 @@ uv = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ;
 	      -cos(2 * pi * y) * sin(2 * pi * x) ];
 p = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
 
-% Horizontal Staggered
-xh = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(2, :))]);
-yh = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(2, :))]);
+% Horizontal staggered
+xh = mean([mesh.coor(1, mesh.cn(2, :)); mesh.coor(1, mesh.cn(4, :))]);
+yh = mean([mesh.coor(2, mesh.cn(2, :)); mesh.coor(2, mesh.cn(4, :))]);
 
-% Vertical Staggered
-xv = mean([mesh.coor(1, mesh.cn(1, :)); mesh.coor(1, mesh.cn(4, :))]);
-yv = mean([mesh.coor(2, mesh.cn(1, :)); mesh.coor(2, mesh.cn(4, :))]);
+% Vertical staggered
+xv = mean([mesh.coor(1, mesh.cn(3, :)); mesh.coor(1, mesh.cn(4, :))]);
+yv = mean([mesh.coor(2, mesh.cn(3, :)); mesh.coor(2, mesh.cn(4, :))]);
 
 % Centered
 xp = xv;
