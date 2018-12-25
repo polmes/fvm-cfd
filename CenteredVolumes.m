@@ -44,12 +44,8 @@ classdef CenteredVolumes < handle
 
 			% Different method
 			%%{
-			% It is possible that Km is unnecessary, since A and Am end up equal
-			Km = speye(mesh.NV,mesh.NV);
-			Km(:,1) = Km(:,1) - 1;
-			Am = A * Km;
 			pR=0;
-			pL=Am(2:end,2:end) \ ( b(2:end) - Am(2:end,1) * pR );
+			pL=A(2:end,2:end) \ ( b(2:end) - A(2:end,1) * pR ); %ALL\(bL-ALR*pR)
 			p = [pR;pL];
 			%}
 
