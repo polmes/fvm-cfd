@@ -33,7 +33,7 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 		end
 		
 		function d = diffusive(this, mesh, uv)
-			d = this.getDiffusive(uv(1, :), this.uidx, mesh.dx, mesh.dy);
+			d = this.getGradients(uv(1, :), this.uidx, mesh.dx, mesh.dy);
 		end
 	end
 end

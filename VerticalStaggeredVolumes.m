@@ -33,7 +33,7 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 		end
 		
 		function d = diffusive(this, mesh, uv)
-			d = this.getDiffusive(uv(2, :), this.vidx, mesh.dy, mesh.dx);
+			d = this.getGradients(uv(2, :), this.vidx, mesh.dy, mesh.dx);
 		end
 	end
 end
