@@ -32,7 +32,11 @@ ucom = [ reshape(uv(1, :), NN) , zeros(NN) ];
 vcom = [ zeros(NN) , reshape(uv(2, :), NN) ];
 
 h=figure;
-quiver(xrep, yrep, scale_factor*repmat(ucom, [3 3]), scale_factor*repmat(vcom, [3 3]),'AutoScale','off');
+if(~exist('scale_factor') || scale_factor==0)
+	quiver(xrep, yrep, repmat(ucom, [3 3]), repmat(vcom, [3 3]));
+else
+	quiver(xrep, yrep, scale_factor*repmat(ucom, [3 3]), scale_factor*repmat(vcom, [3 3]),'AutoScale','off');
+end
 xlim(X); ylim(Y); grid('on'); xticks(xtck); yticks(ytck);
 end
 
