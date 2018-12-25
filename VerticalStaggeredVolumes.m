@@ -31,5 +31,14 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 			% c = 1/4 * (ue .* Fe - uw .* Fw + un .* Fn - us .* Fs);
 			c = sum(V .* F, 1);
 		end
+		
+		function d = diffusive(this, mesh, uv)
+			dn = (uv(2, this.vidx(2, :)) - uv(2, this.vidx(1, :))) ./ mesh.dy(this.vidx(2, :));
+			ds = (uv(2, this.vidx(1, :)) - uv(2, this.vidx(3, :))) ./ mesh.dy(this.vidx(1, :));
+			de = (uv(2, this.vidx(4, :)) - uv(2, this.vidx(1, :))) ./ (mesh.dx(this.vidx(4, :)) / 2 + mesh.dx(this.vidx(1, :)) / 2);
+			dw = (uv(2, this.vidx(1, :)) - uv(2, this.vidx(5, :))) ./ (mesh.dx(this.vidx(1, :)) / 2 + mesh.dx(this.vidx(5, :)) / 2);
+			
+			d = mesh.dx(this.vidx(1, :)) .* (dn - ds) + (mesh.dy(this.vidx(1, :)) / 2 + mesh.dy(this.vidx(2, :)) / 2)  .* (de - dw);
+		end
 	end
 end
