@@ -33,12 +33,7 @@ classdef HorizontalStaggeredVolumes < StaggeredVolumes
 		end
 		
 		function d = diffusive(this, mesh, uv)
-			de = (uv(1, this.uidx(2, :)) - uv(1, this.uidx(1, :))) ./ mesh.dx(this.uidx(2, :));
-			dw = (uv(1, this.uidx(1, :)) - uv(1, this.uidx(3, :))) ./ mesh.dx(this.uidx(1, :));
-			dn = (uv(1, this.uidx(4, :)) - uv(1, this.uidx(1, :))) ./ (mesh.dy(this.uidx(4, :)) / 2 + mesh.dy(this.uidx(1, :)) / 2);
-			ds = (uv(1, this.uidx(1, :)) - uv(1, this.uidx(5, :))) ./ (mesh.dy(this.uidx(1, :)) / 2 + mesh.dy(this.uidx(5, :)) / 2);
-			
-			d = mesh.dy(this.uidx(1, :)) .* (de - dw) + (mesh.dx(this.uidx(1, :)) / 2 + mesh.dx(this.uidx(2, :)) / 2)  .* (dn - ds);
+			d = this.getDiffusive(uv(1, :), this.uidx, mesh.dx, mesh.dy);
 		end
 	end
 end
