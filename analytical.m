@@ -76,16 +76,16 @@ for k = 1:length(NN)
 	Cn = mesh.convective(uv) ./ mesh.vol;
 	
 	% Numerical diffusive term
-% 	Dn = mesh.diffusive(uv) ./ mesh.vol;
+	Dn = mesh.diffusive(uv) ./ mesh.vol;
 
 	% Errors
 	errc(k) = sqrt(sum(sum((Cn - Ca).^2 .* mesh.vol)));
-% 	errd(k) = sqrt(sum(sum((Dn - Da).^2 .* mesh.vol)));
+	errd(k) = sqrt(sum(sum((Dn - Da).^2 .* mesh.vol)));
 
 	% Print
 	disp(['Iteration #' num2str(k)]);
 	disp(['Error Convective: ' num2str(errc(k))]);
-% 	disp(['Error Diffusive: ' num2str(errd(k))]);
+	disp(['Error Diffusive: ' num2str(errd(k))]);
 	disp(' ');
 
 	waitbar(sum(NN(1:k).^2) / sum(NN.^2));
@@ -99,25 +99,25 @@ h = L ./ NN;
 
 % Remove outliers
 indc = find(errc > 1e-6);
-% indd = find(errd > 1e-6);
+indd = find(errd > 1e-6);
 
 % Plot
 figure;
 hold('on');
-loglog(h(indc), errc(indc));
-% loglog(h(indd), errd(indd));
+loglog(h(indc), errc(indc), '^-', 'MarkerFaceColor', 'auto');
+loglog(h(indd), errd(indd), 'v-', 'MarkerFaceColor', 'auto');
 loglog(h, h.^2);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 grid('on');
 xlabel('Grid Size', 'Interpreter', 'latex', 'FontSize', 15);
 ylabel('Error', 'Interpreter', 'latex', 'FontSize', 15);
-legend('Convetive', 'h^2'); % 'Diffusive'
+legend({'Convective', 'Diffusive', 'h^2'}, 'Location', 'northwest');
 set(findall(gca, 'Type', 'Line'), 'LineWidth', 1);
 set(gca, 'FontSize', 12);
 set(gcf, 'Units', 'centimeters', 'Position', [0 0 21 14]);
 
 % Slopes
 pc = polyfit(log10(h(indc)), log10(errc(indc)), 1);
-% pd = polyfit(log10(h(indd)), log10(errd(indd)), 1);
+pd = polyfit(log10(h(indd)), log10(errd(indd)), 1);
 disp(['Slope Convective: ' num2str(pc(1))]);
-% disp(['Slope Diffusive:  ' num2str(pd(1))]);
+disp(['Slope Diffusive:  ' num2str(pd(1))]);
