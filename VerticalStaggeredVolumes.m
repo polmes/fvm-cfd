@@ -17,10 +17,10 @@ classdef VerticalStaggeredVolumes < StaggeredVolumes
 						  mesh.rel(2, :) ;
 						  mesh.rel(4, :) ];
 			
-			this.uidx = [ mesh.rel(1, :)               ;
-			              1:mesh.NV                    ;
-			              mesh.rel(1, mesh.rel(4, :))  ;
-						  mesh.rel(4, :)               ];
+			this.uidx = [ mesh.rel(1, :)              ;
+			              1:mesh.NV                   ;
+			              mesh.rel(1, mesh.rel(4, :)) ;
+						  mesh.rel(4, :)              ];
 		end
 
 		function c = convective(this, mesh, uv)
