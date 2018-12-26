@@ -30,5 +30,9 @@ classdef StructuredMesh < Mesh
 			D = [ this.hsv.diffusive(this, uv) ;
 				  this.vsv.diffusive(this, uv) ];
 		end
+		
+		function [uvcorr, pp] = correction(this, uv)
+			[uvcorr, pp] = this.cv.correction(this, uv);
+		end
 	end
 end
