@@ -1,4 +1,4 @@
-classdef StaggeredVolumes < handle % < Volumes
+classdef StaggeredVolumes < Volumes
 	properties
 		% eidx;
 	end

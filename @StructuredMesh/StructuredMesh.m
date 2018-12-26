@@ -18,6 +18,7 @@ classdef StructuredMesh < Mesh
 		function generateVolumes(this)
 			this.hsv = HorizontalStaggeredVolumes(this);
 			this.vsv = VerticalStaggeredVolumes(this);
+			this.cv = CenteredVolumes(this);
 		end
 		
 		function C = convective(this, uv)
@@ -28,6 +29,10 @@ classdef StructuredMesh < Mesh
 		function D = diffusive(this, uv)
 			D = [ this.hsv.diffusive(this, uv) ;
 				  this.vsv.diffusive(this, uv) ];
+		end
+		
+		function [uvcorr, pp] = correction(this, uv)
+			[uvcorr, pp] = this.cv.correction(this, uv);
 		end
 	end
 end
