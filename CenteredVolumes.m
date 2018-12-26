@@ -1,4 +1,4 @@
-classdef CenteredVolumes < handle
+classdef CenteredVolumes < Volumes
 	properties
 		uvidx; % 4xNV
 		% 4 1
@@ -20,47 +20,35 @@ classdef CenteredVolumes < handle
 			               mesh.rel(4, :)];
 		end
 
-		function p = pseudoP(this, mesh, uv)
+		function p = getPseudoPressure(this, mesh, uv)
+			% RHS
+			fn = mesh.dx(this.uvidx(1, :)) .* uv(2, this.uvidx(1, :));
+			fe = mesh.dy(this.uvidx(2, :)) .* uv(1, this.uvidx(2, :));
+			fs = mesh.dx(this.uvidx(3, :)) .* uv(2, this.uvidx(3, :));
+			fw = mesh.dy(this.uvidx(4, :)) .* uv(1, this.uvidx(4, :));
+			b = (fn + fe - fs - fw).';
 
-			% Pressure Correction Vector
-			Fn = mesh.dx(this.uvidx(1,:)) .* uv(2,this.uvidx(1,:));
-			Fe = mesh.dy(this.uvidx(2,:)) .* uv(1,this.uvidx(2,:));
-			Fs = mesh.dx(this.uvidx(3,:)) .* uv(2,this.uvidx(3,:));
-			Fw = mesh.dy(this.uvidx(4,:)) .* uv(1,this.uvidx(4,:));
-
-			b=(Fn+Fe-Fs-Fw).';
-
-
-			% Pressure Correction Matrix
-			dn = mesh.dx(this.uvidx(1,:)) ./ ( mesh.dy(this.pidx(1,:)) + mesh.dy(this.pidx(2,:)) );
-			de = mesh.dy(this.uvidx(2,:)) ./ ( mesh.dx(this.pidx(1,:)) + mesh.dx(this.pidx(3,:)) );
-			ds = mesh.dx(this.uvidx(3,:)) ./ ( mesh.dy(this.pidx(1,:)) + mesh.dy(this.pidx(4,:)) );
-			dw = mesh.dy(this.uvidx(4,:)) ./ ( mesh.dx(this.pidx(1,:)) + mesh.dx(this.pidx(5,:)) );
-
-			V = 2 * [-dn-de-ds-dw; dn; de; ds; dw];
-			I = repmat(this.pidx(1,:),[5 1]);
+			% LHS
+			dn = mesh.dx(this.uvidx(1, :)) ./ ( mesh.dy(this.pidx(1, :)) + mesh.dy(this.pidx(2, :)) );
+			de = mesh.dy(this.uvidx(2, :)) ./ ( mesh.dx(this.pidx(1, :)) + mesh.dx(this.pidx(3, :)) );
+			ds = mesh.dx(this.uvidx(3, :)) ./ ( mesh.dy(this.pidx(1, :)) + mesh.dy(this.pidx(4, :)) );
+			dw = mesh.dy(this.uvidx(4, :)) ./ ( mesh.dx(this.pidx(1, :)) + mesh.dx(this.pidx(5, :)) );
+			V = 2 * [ -(dn + de + ds + dw); dn; de; ds; dw ];
+			I = repmat(this.pidx(1,:), [5 1]);
 			J = this.pidx;
-			A = sparse(double(I(:)),double(J(:)),V(:));
+			A = sparse(double(I(:)), double(J(:)), V(:));
 
-			% Different method
-			%%{
-			pR=0;
-			pL=A(2:end,2:end) \ ( b(2:end) - A(2:end,1) * pR ); %ALL\(bL-ALR*pR)
-			p = [pR;pL];
-			%}
-
-			% Method in the slides
-			%{
-			A(1)=-5;
-			p=A\b;
-			%}
+			% pL = ALL \ (bL - ALR * pR)
+			pR = 0;
+			pL = A(2:end, 2:end) \ (b(2:end) - A(2:end, 1) * pR);
+			p = [pR; pL];
 		end
 
-		function uvcorr = uvCorrection(this,mesh,uv)
-			p = this.pseudoP(mesh, uv);
+		function [uvcorr, pp] = correction(this, mesh, uv)
+			pp = this.getPseudoPressure(mesh, uv);
 
-			ucorr = ( p(this.pidx(3,:)) - p(this.pidx(1,:)) ).' ./ mesh.dx;
-			vcorr = ( p(this.pidx(2,:)) - p(this.pidx(1,:)) ).' ./ mesh.dy;
+			ucorr = ( pp(this.pidx(3, :)) - pp(this.pidx(1, :)) ).' ./ mesh.dx;
+			vcorr = ( pp(this.pidx(2, :)) - pp(this.pidx(1, :)) ).' ./ mesh.dy;
 			uvcorr = [ucorr; vcorr];
 		end
 	end
