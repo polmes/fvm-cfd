@@ -1,4 +1,4 @@
-classdef StaggeredVolumes < Volumes
+classdef StaggeredVolumes < vol.Volumes
 	properties
 		% eidx;
 	end

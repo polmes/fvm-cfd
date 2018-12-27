@@ -1,4 +1,4 @@
-classdef StructuredMesh < Mesh
+classdef StructuredMesh < msh.Mesh
 	properties
 		Nx;
 		Ny;
@@ -23,9 +23,9 @@ classdef StructuredMesh < Mesh
 		end
 				
 		function generateVolumes(this)
-			this.hsv = HorizontalStaggeredVolumes(this);
-			this.vsv = VerticalStaggeredVolumes(this);
-			this.cv = CenteredVolumes(this);
+			this.hsv = vol.HorizontalStaggeredVolumes(this);
+			this.vsv = vol.VerticalStaggeredVolumes(this);
+			this.cv  = vol.CenteredVolumes(this);
 		end
 		
 		function setCounts(this, Nx, Ny)

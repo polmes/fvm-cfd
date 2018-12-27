@@ -1,7 +1,7 @@
-classdef UniformMesh < StructuredMesh
+classdef UniformMesh < msh.StructuredMesh
 	methods
 		function this = UniformMesh(x, y, Nx, Ny)
-			this@StructuredMesh(x, y, Nx, Ny);
+			this@msh.StructuredMesh(x, y, Nx, Ny);
 		end
 		
 		function generateNodes(this, x, y)

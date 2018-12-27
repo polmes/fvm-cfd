@@ -1,4 +1,4 @@
-classdef VerticalStaggeredVolumes < StaggeredVolumes
+classdef VerticalStaggeredVolumes < vol.StaggeredVolumes
 	properties
 		uidx; % 4xNV
 		% 3 1

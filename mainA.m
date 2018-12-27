@@ -40,7 +40,7 @@ errd = zeros(1, length(NN));
 progress = waitbar(0, 'Increasing Entropy...');
 for k = 1:length(NN)
 	% Init
-	mesh = SquareMesh(XY, NN(k));
+	mesh = msh.SquareMesh(XY, NN(k));
 
 	% Horizontal staggered
 	xh = mean([mesh.coor(1, mesh.cn(2, :)); mesh.coor(1, mesh.cn(4, :))]);

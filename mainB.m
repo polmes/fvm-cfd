@@ -2,7 +2,7 @@
 L = 1;
 XY = [0 L];
 N = 10;
-mesh = SquareMesh(XY, N);
+mesh = msh.SquareMesh(XY, N);
 
 % Arbitrary velocity field that fulfills global mass conservation
 uv = zeros(2, mesh.NV);
