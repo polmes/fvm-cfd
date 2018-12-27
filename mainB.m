@@ -1,19 +1,17 @@
 % Init
 L = 1;
-X = [0 L];
-Y = [0 L];
-Nx = 10;
-Ny = 10;
-NN = [Nx Ny];
-mesh = StructuredMesh(X, Y, Nx, Ny);
+XY = [0 L];
+N = 10;
+mesh = msh.SquareMesh(XY, N);
 
-% Arbitrary velocity field
-v = zeros(2,Nx*Ny);
-v(2,round(0.5*Nx*Ny-0.5*Nx+1)) = 1;
-v(2,round(0.5*Nx*Ny-0.5*Nx-1)) = -1;
+% Arbitrary velocity field that fulfills global mass conservation
+uv = zeros(2, mesh.NV);
+uv(2, round(0.5 * (mesh.NV - N) + 1)) = +1;
+uv(2, round(0.5 * (mesh.NV - N) - 1)) = -1;
 
 % Corrected velocity field
-vcorr = v - mesh.cv.uvCorrection(mesh,v);
+uvcorr = uv - mesh.correction(uv);
 
-plotQuiver(mesh,v);
-plotQuiver(mesh,vcorr);
+% Post
+plotQuiver(mesh, uv);
+plotQuiver(mesh, uvcorr);
