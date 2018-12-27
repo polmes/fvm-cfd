@@ -1,4 +1,4 @@
-function [uvt,tr]= time_integr(mesh,uvi,mu,T,tn,itsave)
+function [uvt,tr]= explicit(mesh,uvi,mu,T,tn,itsave)
 
 % Fluid Properties
 
@@ -7,7 +7,7 @@ dt=t(2:end)-t(1:end-1);
 
 uvt=zeros(floor(tn/itsave)+1,size(uvi,1),size(uvi,2));
 
-uv=uvi-mesh.cv.uvCorrection(mesh,uvi);
+uv=uvi-mesh.correction(uvi);
 C=mesh.convective(uv);
 D=mesh.diffusive(uv);
 Rn=(-C+mu*D)./mesh.vol;
@@ -19,7 +19,7 @@ for k=1:size(dt,2)
 	D=mesh.diffusive(uv);
 	Rn=(-C+mu*D)./mesh.vol;
 	uvnew=uv+dt(k)*(1.5*Rn-0.5*Ro);
-	uvcorr=uvnew-mesh.cv.uvCorrection(mesh,uvnew);
+	uvcorr=uvnew-mesh.correction(uvnew);
 	
 	if(mod(k,itsave)==0)
 		display(['Iteration ',num2str(k)]);
