@@ -1,4 +1,4 @@
-classdef CenteredVolumes < Volumes
+classdef CenteredVolumes < vol.Volumes
 	properties
 		uvidx; % 4xNV
 		% 4 1
