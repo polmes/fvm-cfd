@@ -1,4 +1,4 @@
-function h = quiver(mesh, uv, scale, isNew)
+function h = quiver(mesh, uv, isNew, scale)
 	% Limits
 	X = mesh.coor(1, [1 end]);
 	Y = mesh.coor(2, [1 end]);
@@ -23,11 +23,11 @@ function h = quiver(mesh, uv, scale, isNew)
 	VV = [ zeros(NN) reshape(uv(2, :), NN) ];
 	
 	% Create figure handle
-	if nargin == 4 && isNew
+	if nargin > 2 && isNew
 		h = figure;
 	end
 	
-	if ( exist('scale', 'var') && scale ~= 0 )
+	if (nargin == 4 && scale ~= 0)
 		quiver(XX, YY, scale * UU, scale * VV, 'AutoScale', 'off');
 	else
 		quiver(XX, YY, UU, VV);
