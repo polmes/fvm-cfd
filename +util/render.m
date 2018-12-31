@@ -29,11 +29,11 @@ function render(mesh, t, uvt, write)
 		
 		if strcmp(write, 'video')
 			% Filename
-			file = uiputfile({'*.avi', 'AVI Video Files (*.avi)'}, 'Specify filename for video');
+			[file, path] = uiputfile({'*.avi', 'AVI Video Files (*.avi)'}, 'Specify filename for video');
 			
 			if file
 				% Setup
-				out = file(1:(end - 4));
+				out = [path file]; % /path/to/filename.avi
 				pro = 'Motion JPEG AVI'; % video profile
 				fps = 60; % video framerate
 				qlt = 75; % video quality
@@ -54,11 +54,12 @@ function render(mesh, t, uvt, write)
 			end
 		elseif strcmp(write, 'gif')
 			% Filename
-			file = uiputfile({'*.gif', 'GIF Animation Files (*.gif)'}, 'Specify filename for GIF');
+			[file, path] = uiputfile({'*.gif', 'GIF Animation Files (*.gif)'}, 'Specify filename for GIF');
 			
 			if file
 				% Setup
-				delay = 0.01;
+				out = [path file]; % % /path/to/filename.gif
+				del = 0.01; % delay between frames
 				
 				% Loop
 				progress = waitbar(0, 'Saving...');
@@ -67,9 +68,9 @@ function render(mesh, t, uvt, write)
 					[in, cm] = rgb2ind(im, 256);
 
 					if k  == 1
-						imwrite(in, cm, file, 'gif', 'Loopcount', inf, 'DelayTime', delay);
+						imwrite(in, cm, out, 'gif', 'Loopcount', inf, 'DelayTime', del);
 					else
-						imwrite(in, cm, file, 'gif', 'WriteMode', 'append', 'DelayTime', delay);
+						imwrite(in, cm, out, 'gif', 'WriteMode', 'append', 'DelayTime', del);
 					end
 
 					waitbar(k / NT);
