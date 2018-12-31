@@ -1,0 +1,92 @@
+function render(mesh, t, uvt, write)	
+	% Parameters
+	NT = length(t);
+	scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));
+	
+	% Init
+	figure;
+	M = struct('cdata', cell(1, NT), 'colormap', cell(1, NT));
+		
+	% Render
+	progress = waitbar(0, 'Rendering...');
+	for k = 1:NT
+		cla;
+
+		util.quiver(mesh, uvt(:, :, k), scale);
+
+		title(['$t=' num2str(t(k), '%.2f') '\,$s'], 'Interpreter', 'latex');
+		drawnow;
+
+		M(k) = getframe(gcf);
+
+		waitbar(k / NT);
+	end
+	close(progress);
+	
+	% Write
+	if nargin == 4
+		disp('Saving to disk...');
+		
+		if strcmp(write, 'video')
+			% Filename
+			file = uiputfile({'*.avi', 'AVI Video Files (*.avi)'}, 'Specify filename for video');
+			
+			if file
+				% Setup
+				out = file(1:(end - 4));
+				pro = 'Motion JPEG AVI'; % video profile
+				fps = 60; % video framerate
+				qlt = 75; % video quality
+
+				% Init
+				vid = VideoWriter(out, pro);
+				vid.FrameRate = fps;
+				vid.Quality = qlt;				
+				
+				% Export
+				open(vid);
+				writeVideo(vid, M);
+				close(vid);
+				
+				disp('Done.');
+			else
+				disp('No filename for video specified. Bye-bye.');
+			end
+		elseif strcmp(write, 'gif')
+			% Filename
+			file = uiputfile({'*.gif', 'GIF Animation Files (*.gif)'}, 'Specify filename for GIF');
+			
+			if file
+				% Setup
+				delay = 0.01;
+				
+				% Loop
+				progress = waitbar(0, 'Saving...');
+				for k = 1:NT
+					im = frame2im(M(k));
+					[in, cm] = rgb2ind(im, 256);
+
+					if k  == 1
+						imwrite(in, cm, file, 'gif', 'Loopcount', inf, 'DelayTime', delay);
+					else
+						imwrite(in, cm, file, 'gif', 'WriteMode', 'append', 'DelayTime', delay);
+					end
+
+					waitbar(k / NT);
+				end
+				close(progress)
+
+				disp('Done.');
+			else
+				disp('No filename for GIF specified. Bye-bye.');
+			end
+		else
+			error('Unknown write destination specified. Bye-bye.');
+		end
+	end
+	
+	% Playback
+	disp('Playing back animation...');
+	movie(gcf, M, 3);
+	disp('Done.');
+end
