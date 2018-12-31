@@ -49,7 +49,7 @@ classdef CenteredVolumes < vol.Volumes
 
 			ucorr = ( pp(this.pidx(3, :)) - pp(this.pidx(1, :)) ).' ./ mesh.dx;
 			vcorr = ( pp(this.pidx(2, :)) - pp(this.pidx(1, :)) ).' ./ mesh.dy;
-			uvcorr = [ucorr; vcorr];
+			uvcorr = uv - [ucorr; vcorr];
 		end
 	end
 end
