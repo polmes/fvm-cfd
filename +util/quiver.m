@@ -27,10 +27,10 @@ function h = quiver(mesh, uv, scale, isNew)
 		h = figure;
 	end
 	
-	if (nargin == 2 || scale == 0)
-		quiver(XX, YY, UU, VV);
-	else
+	if ( exist('scale', 'var') && scale ~= 0 )
 		quiver(XX, YY, scale * UU, scale * VV, 'AutoScale', 'off');
+	else
+		quiver(XX, YY, UU, VV);
 	end
 	
 	% Grid
