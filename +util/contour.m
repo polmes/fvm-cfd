@@ -1,4 +1,4 @@
-function h = contour(mesh, p, isNew)
+function h = contour(mesh, p, isNew, ~)
 	% Limits
 	X = mesh.coor(1, [1 end]);
 	Y = mesh.coor(2, [1 end]);
