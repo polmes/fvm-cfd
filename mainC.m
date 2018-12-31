@@ -43,5 +43,5 @@ T = [0 tf];
 
 %% POST
 
+util.render(mesh, t, pt);
 util.render(mesh, t, uvt);
-	
