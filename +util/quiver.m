@@ -1,7 +1,8 @@
-function h=plotQuiver(mesh,uv,scale_factor)
-	X=mesh.coor(1,[1 end]);
-	Y=mesh.coor(2,[1 end]);
-	NN=[mesh.Nx mesh.Ny];
+function h = quiver(mesh, uv, scale, isNew)
+	% Limits
+	X = mesh.coor(1, [1 end]);
+	Y = mesh.coor(2, [1 end]);
+	NN = [mesh.Nx mesh.Ny];
 
 	% Horizontal staggered
 	xh = mean([mesh.coor(1, mesh.cn(2, :)); mesh.coor(1, mesh.cn(4, :))]);
@@ -12,29 +13,38 @@ function h=plotQuiver(mesh,uv,scale_factor)
 	yv = mean([mesh.coor(2, mesh.cn(3, :)); mesh.coor(2, mesh.cn(4, :))]);
 
 	% Volume divisions
-	xtck = linspace(X(1) - (X(2)-X(1)), X(2) + (X(2)-X(1)), 3*NN(1)+1);
-	ytck = linspace(Y(1) - (Y(2)-Y(1)), Y(2) + (Y(2)-Y(1)), 3*NN(2)+1);
+	xtck = mesh.coor(1, 1:(mesh.Nx + 1));
+	ytck = mesh.coor(2, 1:(mesh.Nx + 1):(mesh.NV + mesh.Ny + 1));
 
-	% Combine hor and vert into the same quiver plot
-	xcom = [ reshape(xh, NN) , reshape(xv, NN) ];
-	ycom = [ reshape(yh, NN) , reshape(yv, NN) ];
-
-	xrep = [repmat(xcom - ( X(2) - X(1) ), [3 1]) , ...
-			repmat(xcom, [3 1])                   , ...
-			repmat(xcom + ( X(2) - X(1) ), [3 1])];
-
-	yrep = [repmat(ycom - ( Y(2) - Y(1) ), [1 3]) ;
-			repmat(ycom, [1 3])                   ;
-			repmat(ycom + ( Y(2) - Y(1) ), [1 3])];
-
-	ucom = [ reshape(uv(1, :), NN) , zeros(NN) ];
-	vcom = [ zeros(NN) , reshape(uv(2, :), NN) ];
-
-	h=figure;
-	if(~exist('scale_factor', 'var') || scale_factor==0)
-		quiver(xrep, yrep, repmat(ucom, [3 3]), repmat(vcom, [3 3]));
-	else
-		quiver(xrep, yrep, scale_factor*repmat(ucom, [3 3]), scale_factor*repmat(vcom, [3 3]),'AutoScale','off');
+	% Combine u and v into the same quiver plot for automatic scaling
+	XX = [ reshape(xh, NN) reshape(xv, NN) ];
+	YY = [ reshape(yh, NN) reshape(yv, NN) ];
+	UU = [ reshape(uv(1, :), NN) zeros(NN) ];
+	VV = [ zeros(NN) reshape(uv(2, :), NN) ];
+	
+	% Create figure handle
+	if nargin == 4 && isNew
+		h = figure;
 	end
-	xlim(X); ylim(Y); grid('on'); xticks(xtck); yticks(ytck);
+	
+	if (nargin == 2 || scale == 0)
+		quiver(XX, YY, UU, VV);
+	else
+		quiver(XX, YY, scale * UU, scale * VV, 'AutoScale', 'off');
+	end
+	
+	% Grid
+	xlim(X);
+	ylim(Y);
+	grid('on');
+	xticks(xtck);
+	yticks(ytck);
+	
+	% Labels
+	xlabel('$X$ [m]', 'Interpreter', 'latex', 'FontSize', 15);
+	ylabel('$Y$ [m]', 'Interpreter', 'latex', 'FontSize', 15);
+	
+	% Size
+	set(gca, 'FontSize', 12);
+	set(gcf, 'Units', 'centimeters', 'OuterPosition', [0 0 (mesh.Nx / mesh.Ny) * 20 (mesh.Ny / mesh.Nx) * 20]);
 end
