@@ -1,40 +1,47 @@
-clear;clc;
-% Fluid setup
-mu=0.1;%1.3e-3;
+%% PRE
+
+% Fluid properties
+rho = 1.225; % density [kg/m^3]
+nu = 0.1; % 1.48e-5; % kinematic viscosity [m^2/s]
 
 % Mesh setup
-L=1;
-X=[0 1];
-Y=[0 1];
-Nx=10;
-Ny=10;
-mesh=msh.UniformMesh(X, Y, Nx, Ny);
+L = 1; % [m]
+N = 10;
 
-% Simulation setup
-uvi=zeros(2,Nx*Ny);
-uvi(2,(-1:1)+round(0.5*Nx*Ny-0.5*Nx+1))=1;
+% Time setup
+tf = 0.05; % 0.52; % 0.05; % [s]
+dt = 1e-5; % 1e-2; % 1e-3; % time-step [s]
+dti = 2e-3; % 1e-2; % save every # of iterations
 
-T=[0 0.05];
-tn=5000;
-itsave=200;
-[uvt,t]=integration.explicit(mesh,uvi,mu,T,tn,itsave);
+% Initial conditions
+v0 = 1; % [m/s]
 
-% %% Create video
-% %frames=zeros(floor(tn/itsave));
-% for ti=size(uvt,1):-1:1
-% 	h=plotQuiver(mesh,squeeze(uvt(ti,:,:)),0.3);
-% 	drawnow;
-% 	frames(ti)=getframe(h);
-% 	close(h);
-% end
-% 
-% fig=figure;
-% movie(fig,frames,5);
-% 
-% %% Write to file
-% vw = VideoWriter('v1.avi','Motion JPEG AVI');
-% vw.Quality = 95;
-% vw.FrameRate = 10;
-% open(vw);
-% writeVideo(vw,frames);
-% close(vw);
+%% LOOP
+
+% Init mesh
+XY = [0 L];
+mesh = msh.SquareMesh(XY, N);
+
+% Find middle points
+[~, indmc] = min( sum( abs(mesh.coor - L/2), 1 ) );
+indmv = find(mesh.cn(4, :) == indmc);
+if mod(mesh.Nx, 2) == 0
+	% is even
+	indm = (0:1) + indmv;
+else
+	% is odd
+	indm = (0:2) + indmv;
+end
+
+% Init velocity
+uv0 = zeros(2, mesh.NV);
+uv0(2, indm) = v0;
+
+% Time integration
+T = [0 tf];
+[t, uvt, pt] = integration.explicit(mesh, uv0, rho, nu, T, dt, dti);
+
+%% POST
+
+util.render(mesh, t, uvt);
+	
