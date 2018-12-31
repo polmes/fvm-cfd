@@ -3,6 +3,16 @@ function render(mesh, t, uvt, write)
 	NT = length(t);
 	scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));
 	
+	% Determine plot type
+	sz = size(uvt);
+	if sz(1) == 1
+		plot = @util.contour;
+	elseif sz(1) == 2
+		plot = @util.quiver;
+	else
+		error('Wrong input field variable size.');
+	end
+	
 	% Init
 	figure;
 	M = struct('cdata', cell(1, NT), 'colormap', cell(1, NT));
@@ -12,7 +22,7 @@ function render(mesh, t, uvt, write)
 	for k = 1:NT
 		cla;
 
-		util.quiver(mesh, uvt(:, :, k), scale);
+		plot(mesh, uvt(:, :, k), false, scale);
 
 		title(['$t=' num2str(t(k), '%.2f') '\,$s'], 'Interpreter', 'latex');
 		drawnow;
