@@ -1,4 +1,16 @@
 function h = quiver(mesh, uv, isNew, scale)
+	% h = quiver(mesh, uv, isNew, ~)
+	% Plots a quiver map of the vector field uv with the given mesh.
+	%
+	% Parameters:
+	%	mesh  - Mesh which will be used to determine the location of the nodes.
+	%	uv    - Vector field to plot.
+	%	isNew - Creates a new figure if true. Otherwise, plots on top of the currently open window.
+	%	scale - Scaling factor to use in the quiver. If 0, scaling is automatic.
+	%
+	% Return values:
+	%	h - figure handle in which the plot has been drawn
+
 	% Limits
 	X = mesh.coor(1, [1 end]);
 	Y = mesh.coor(2, [1 end]);

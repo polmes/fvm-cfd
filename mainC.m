@@ -1,3 +1,6 @@
+% mainC
+% Script to integrate the Navier-Stokes equations through time.
+
 %% PRE
 
 % Fluid properties
@@ -22,7 +25,7 @@ v0 = 1; % [m/s]
 XY = [0 L];
 mesh = msh.SquareMesh(XY, N);
 
-% Find middle points
+% Arbitrary Initial conditions
 [~, indmc] = min( sum( abs(mesh.coor - L/2), 1 ) );
 indmv = find(mesh.cn(4, :) == indmc);
 if mod(mesh.Nx, 2) == 0
@@ -37,7 +40,7 @@ end
 uv0 = zeros(2, mesh.NV);
 uv0(2, indm) = v0;
 
-% Time integration
+%% Time integration
 T = [0 tf];
 [t, uvt, pt] = integration.explicit(mesh, uv0, rho, nu, T, dt, dti);
 
