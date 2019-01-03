@@ -1,5 +1,5 @@
 function h = quiver(mesh, uv, isNew, scale)
-	% h = quiver(mesh, uv, isNew, ~)
+	% h = quiver(mesh, uv, isNew, scale)
 	% Plots a quiver map of the vector field uv with the given mesh.
 	%
 	% Parameters:
