@@ -20,7 +20,7 @@ classdef CenteredVolumes < vol.Volumes
 			               mesh.rel(4, :)];
 		end
 
-		function p = getPseudoPressure(this, mesh, uv)
+		function [p, b] = getPseudoPressure(this, mesh, uv)
 			% RHS
 			fn = mesh.dx(this.uvidx(1, :)) .* uv(2, this.uvidx(1, :));
 			fe = mesh.dy(this.uvidx(2, :)) .* uv(1, this.uvidx(2, :));
