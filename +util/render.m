@@ -1,4 +1,15 @@
 function render(mesh, t, uvt, write)	
+	% render(mesh, t, uvt, write)
+	% Creates a movie from the given scalar or vector field through time.
+	% If a scalar field is given, the function util.contour() is called.
+	% If a vector field is given, the function util.quiver() is called.
+	%
+	% Parameters:
+	%	mesh  - Mesh with wich to call the corresponding plot function.
+	%	t     - Time instants at which the field has been stored.
+	%	uvt   - Field to plot through time.
+	%	write - File type to render. Possible values: 'video', 'gif' or empty.
+
 	% Parameters
 	NT = length(t);
 	scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));

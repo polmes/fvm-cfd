@@ -1,3 +1,7 @@
+% mainA
+% Script to verify the second-order convergence of the convective and
+% diffusive terms with respect to the volume dimension.
+
 %% PRE
 
 % Manufactured solution
@@ -7,7 +11,7 @@ nu = 1.48e-5; % viscosity [m^2/s]
 F = exp(-8 * pi^2 * nu * t);
 syms x y;
 uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
-          -cos(2 * pi * y) * sin(2 * pi * x) ];
+           -cos(2 * pi * y) * sin(2 * pi * x) ];
 pa = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
 uvf = matlabFunction(uva);
 pf = matlabFunction(pa);
@@ -29,7 +33,7 @@ L = 1;
 XY = [0 L];
 
 % Loop parameters
-NN = round(logspace(log10(3), 2, 10));
+NN = unique(round(logspace(log10(3), 2, 10)));
 
 %% LOOP
 

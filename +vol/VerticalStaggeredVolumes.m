@@ -1,12 +1,24 @@
 classdef VerticalStaggeredVolumes < vol.StaggeredVolumes
+	% vol.VerticalStaggeredVolumes
+	% Specialization of vol.StaggeredVolumes for volumes staggered in the y direction.
+
 	properties
-		uidx; % 4xNV
-		% 3 1
-		% 4 2
-		vidx; % 5xNV
-		%   2
-		% 5 1 4
-		%   3
+		% Velocities in the x direction surrounding the staggered volume
+		% +---+
+		% 3>  1>
+		% +---+
+		% 4>  2>
+		% +---+
+		uidx;
+
+		% Velocities in the y direction surrounding the staggered volume
+		%       ꞈ
+		% +---+-2-+---+
+		% | ꞈ | ꞈ | ꞈ |
+		% +-5-+-1-+-4-+
+		% |   | ꞈ |   |
+		% +---+-3-+---+
+		vidx;
 	end
 
 	methods

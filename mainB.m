@@ -1,3 +1,6 @@
+% mainB
+% Script to verify the pseudo-pressure algorithm.
+
 %% PRE
 
 % Init

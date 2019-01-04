@@ -1,4 +1,22 @@
 function [ts, uvt, pt] = explicit(mesh, uv0, rho, nu, T, dt, dti)
+	% [ts, uvt, pt] = explicit(mesh, uv0, rho, nu, T, dt, dti)
+	% Integrates the Navier-Stokes equations through time, using an explicit
+	% Adams-Bashford scheme.
+	%
+	% Parameters:
+	%	mesh - A given mesh, derived from the class msh.Mesh
+	%	uv0  - Initial velocity field at t=T(1)
+	%	rho  - Density of the fluid
+	%	nu   - Kinematic viscosity
+	%	T    - Time interval through which to integrate. T= [t_i t_f]
+	%	dt   - Time differential with which to integrate.
+	%	dti  - Time interval after which data will be stored. Must be a multiple of dt.
+	%
+	% Return values:
+	%	ts  - Time instants in which data has been stored.
+	%	uvt - Velocity field at time instants ts.
+	%	pt  - Pressure field at time instants ts.
+
 	% Check input
 	if mod(dti, dt) ~= 0
 		dti = dt * floor(dti / dt);
