@@ -46,11 +46,12 @@ classdef CenteredVolumes < vol.Volumes
 			               mesh.rel(4, :)];
 		end
 
-		function p = getPseudoPressure(this, mesh, uv)
+		function [p, b] = getPseudoPressure(this, mesh, uv)
 			% Returns the solution to the laplace equation laplacian(pp)=div(uv)
 			% for a given uv. The field pp will be relative to the first element,
 			% which is always set to 0.
-
+			% Also returns b, which represents the divergence at each volume.
+			
 			% RHS
 			fn = mesh.dx(this.uvidx(1, :)) .* uv(2, this.uvidx(1, :));
 			fe = mesh.dy(this.uvidx(2, :)) .* uv(1, this.uvidx(2, :));

@@ -31,6 +31,15 @@ uvcorr = mesh.correction(uv);
 
 %% POST
 
+% Mass conservation verification: b = div(U)
+[~, b] = mesh.cv.getPseudoPressure(mesh, uv);
+[~, bcorr] = mesh.cv.getPseudoPressure(mesh, uvcorr);
+
+% Print results
+disp('Norm of div(U)');
+disp(['- Before correction: ' num2str(norm(b))]);
+disp(['- After correction: ' num2str(norm(bcorr))]);
+
 % Plot velocity field: before & after
-util.quiver(mesh, uv);
-util.quiver(mesh, uvcorr);
+util.quiver(mesh, uv, true);
+util.quiver(mesh, uvcorr, true);

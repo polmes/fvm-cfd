@@ -8,7 +8,7 @@
 t = 100; % time [s]
 rho = 1.225; % density [kg/m^3]
 nu = 1.48e-5; % viscosity [m^2/s]
-F = 1; % exp(-8 * pi^2 * nu * t);
+F = exp(-8 * pi^2 * nu * t);
 syms x y;
 uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
            -cos(2 * pi * y) * sin(2 * pi * x) ];
