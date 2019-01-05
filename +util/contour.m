@@ -1,11 +1,12 @@
-function h = contour(mesh, p, isNew, ~)
-	% h = contour(mesh, p, isNew, ~)
+function h = contour(mesh, p, isNew, scale)
+	% h = contour(mesh, p, isNew, scale)
 	% Plots a colored map of the scalar field p with the given mesh.
 	%
 	% Parameters:
 	%	mesh  - Mesh which will be used to determine the location of the nodes.
 	%	p     - Scalar field to plot.
 	%	isNew - Creates a new figure if true. Otherwise, plots on top of the currently open window.
+	%	scale - Determines the colorbar scale
 	%
 	% Return values:
 	%	h - figure handle in which the plot has been drawn
@@ -31,12 +32,19 @@ function h = contour(mesh, p, isNew, ~)
 	imagesc(XX, YY, P);
 	set(gca, 'YDir', 'normal');
 	
+	% Add colorbar
+	colorbar;
+	if nargin == 4
+		caxis(scale);
+	end
+	
 	% Grid
 	xlim(X);
 	ylim(Y);
 	grid('on');
 	xticks(xtck);
 	yticks(ytck);
+	xtickangle(90);
 	
 	% Labels
 	xlabel('$X$ [m]', 'Interpreter', 'latex', 'FontSize', 15);

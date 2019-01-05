@@ -12,14 +12,15 @@ function render(mesh, t, uvt, write)
 
 	% Parameters
 	NT = length(t);
-	scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));
 	
 	% Determine plot type
 	sz = size(uvt);
 	if sz(1) == 1
 		plot = @util.contour;
+		scale = [min(min(uvt)) max(max(uvt))];
 	elseif sz(1) == 2
 		plot = @util.quiver;
+		scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));
 	else
 		error('Wrong input field variable size.');
 	end
