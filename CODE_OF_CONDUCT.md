@@ -2,4 +2,4 @@
 
 ## TL;DR
 
-Just be nice to each other.
+Just be nice to each other. Thank you.
