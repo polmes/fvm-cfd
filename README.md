@@ -1,5 +1,18 @@
 # FVM CFD
-Computational Fluid Dynamics with the Finite Volume Method
+*Computational Fluid Dynamics (CFD) with the Finite Volume Method (FVM)*
 
-## FEM CFD
-For an alternatie approach in development using the Finite Element Method, check out [this repo](https://github.com/Qjammer/fem-cfd "Qjammer's FEM CFD")
+This is our Navier-Stokes spectro-consistent FVM CFD solver for the Master's Aerodynamics course
+
+## Current limitations
+
+- 2D problems
+- Structured mesh
+- Periodic boundary conditions
+
+## How to test scripts
+
+- `mainA.m` verifies convective and diffusive terms
+- `mainB.m` verifies pressure correction method
+- `mainC.m` verifies time integration algorithm
+
+*The code has been tested using the latest MATLAB R2018b on Linux*
