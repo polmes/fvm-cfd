@@ -14,7 +14,6 @@ F = exp(-8 * pi^2 * nu * t);
 syms x y;
 uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ;
            -cos(2 * pi * y) * sin(2 * pi * x) ];
-pa = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
 
 uvf = matlabFunction(uva);
 
