@@ -39,6 +39,7 @@ function h = quiver(mesh, uv, isNew, scale)
 	grid('on');
 	xticks(xtck);
 	yticks(ytck);
+	xtickangle(90);
 	
 	% Labels
 	xlabel('$X$ [m]', 'Interpreter', 'latex', 'FontSize', 15);
