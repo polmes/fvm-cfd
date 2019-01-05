@@ -1,4 +1,4 @@
-function h = contour(mesh, p, isNew, ~)
+function h = contour(mesh, p, isNew, scale)
 	% Limits
 	X = mesh.coor(1, [1 end]);
 	Y = mesh.coor(2, [1 end]);
@@ -20,12 +20,19 @@ function h = contour(mesh, p, isNew, ~)
 	imagesc(XX, YY, P);
 	set(gca, 'YDir', 'normal');
 	
+	% Add colorbar
+	colorbar;
+	if nargin == 4
+		caxis(scale);
+	end
+	
 	% Grid
 	xlim(X);
 	ylim(Y);
 	grid('on');
 	xticks(xtck);
 	yticks(ytck);
+	xtickangle(90);
 	
 	% Labels
 	xlabel('$X$ [m]', 'Interpreter', 'latex', 'FontSize', 15);
