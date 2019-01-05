@@ -1,16 +1,16 @@
 %% PRE
 
-% Manufactured solution
-t = 100; % time [s]
+% Fluid properties
 rho = 1.225; % density [kg/m^3]
 nu = 1.48e-5; % viscosity [m^2/s]
+
+% Manufactured solution
+t = 100; % time [s]
 F = exp(-8 * pi^2 * nu * t);
 syms x y;
-uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ; 
-          -cos(2 * pi * y) * sin(2 * pi * x) ];
-pa = -F^2 * rho * (cos(4 * pi * x) + cos(4 * pi * y)) / 4;
+uva = F * [ cos(2 * pi * x) * sin(2 * pi * y) ; 
+           -cos(2 * pi * y) * sin(2 * pi * x) ];
 uvf = matlabFunction(uva);
-pf = matlabFunction(pa);
 
 % Analytical convective term
 conv1a = divergence(uva(1) * uva, [x y]);
@@ -19,17 +19,17 @@ conv1f = matlabFunction(conv1a);
 conv2f = matlabFunction(conv2a);
 
 % Analytical diffusive term
-diff1a = laplacian(uva(1),[x y]);
-diff2a = laplacian(uva(2),[x y]);
+diff1a = laplacian(uva(1), [x y]);
+diff2a = laplacian(uva(2), [x y]);
 diff1f = matlabFunction(diff1a);
 diff2f = matlabFunction(diff2a);
 
 % Numerical parameters
-L = 1;
+L = 1; % mesh size [m]
 XY = [0 L];
 
 % Loop parameters
-NN = round(logspace(log10(3), 2, 10));
+NN = round(logspace(log10(3), 2, 10)); % # of elements
 
 %% LOOP
 
@@ -50,10 +50,6 @@ for k = 1:length(NN)
 	xv = mean([mesh.coor(1, mesh.cn(3, :)); mesh.coor(1, mesh.cn(4, :))]);
 	yv = mean([mesh.coor(2, mesh.cn(3, :)); mesh.coor(2, mesh.cn(4, :))]);
 
-	% Centered
-	xp = xv;
-	yp = yh;
-
 	% Analytical convective term
 	Ch = conv1f(xh, yh);
 	Cv = conv2f(xv, yv);
@@ -68,9 +64,6 @@ for k = 1:length(NN)
 	uvh = uvf(xh, yh); uh = uvh(1, :); % u
 	uvv = uvf(xv, yv); vv = uvv(2, :); % v
 	uv = [uh; vv];
-	
-	% Pressure field
-	p = pf(xp, yp);
 
 	% Numerical convective term
 	Cn = mesh.convective(uv) ./ mesh.vol;
