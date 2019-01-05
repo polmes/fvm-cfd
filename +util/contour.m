@@ -7,6 +7,7 @@ function h = contour(mesh, p, isNew, scale)
 	%	p     - Scalar field to plot.
 	%	isNew - Creates a new figure if true. Otherwise, plots on top of the currently open window.
 	%	scale - Determines the colorbar scale
+	%
 	% Return values:
 	%	h - figure handle in which the plot has been drawn
 
