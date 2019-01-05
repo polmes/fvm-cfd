@@ -1,3 +1,6 @@
+% mainC
+% Script to integrate the Navier-Stokes equations through time.
+
 %% PRE
 
 % Fluid properties

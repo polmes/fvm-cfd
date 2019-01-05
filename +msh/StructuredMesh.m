@@ -1,16 +1,35 @@
 classdef StructuredMesh < msh.Mesh
+	% msh.StructuredMesh
+	% Represents a mesh with a rectangular structured discretization of the volumes in it.
+	%
+	% msh.StructuredMesh methods:
+	%	StructuredMesh(x, y, Nx, Ny) - Constructs mesh with x and y dimensions and Nx and Ny divisions
+	%	generateVolumes() - Generates the necessary staggered and centered volume objects.
+	%	setCounts(Nx, Ny) - Sets the number of divisions in each axis and the total number of volumes.
+	%	setCorners()   - Generates the mesh.cn matrix
+	%	setNeighbors() - Generates the mesh.rel matrix
+	%	setDeltas()    - Generates the mesh.dx, dy and vol matrices
+	%	convective(uv) - Returns the convective term for the given velocity field
+	%	diffusive(uv)  - Returns the diffusive term for the given velocity field
+	%	correction(uv) - Wrapper function for the pseudo-pressure gradient
+
 	properties
-		Nx;
-		Ny;
-		dx;
-		dy;
-		hsv;
-		vsv;
-		cv;
+		Nx;% Number of volume divisions in the x axis
+		Ny;% Number of volume divisions in the y axis
+
+		dx;% Volume dimension in the x axis
+		dy;% Volume dimension in the y axis
+
+		hsv;% Horizontal staggered volumes object
+		vsv;% Vertical staggered volumes object
+		cv;% Centered volumes object
 	end
 	
 	methods
 		function this = StructuredMesh(x, y, Nx, Ny)
+			% Constructs the StructuredMesh object with dimensions x and y
+			% and number of volumes Nx and Ny in each dimension
+
 			% Grid
 			this.setCounts(Nx, Ny);
 			this.generateNodes(x, y); % to be implemented in subclass
@@ -35,6 +54,13 @@ classdef StructuredMesh < msh.Mesh
 		end
 
 		function setCorners(this)
+			% Generates the mesh.cn matrix. This matrix is responsible for
+			% giving each element its corresponding vertices,
+			% according to the following pattern:
+			% 3--4
+			% |  |
+			% 1--2
+
 			SIZE = [this.Nx + 1, this.Ny + 1];
 
 			[IL1,IL2] = ndgrid(1:SIZE(1),1:SIZE(2));
@@ -62,6 +88,17 @@ classdef StructuredMesh < msh.Mesh
 		end
 
 		function setNeighbors(this)
+			% Generates the mesh.rel matrix. This matrix is responsible for
+			% giving each volume its corresponding neighbors, according to
+			% the following pattern:
+			%+---+---+---+
+			%|   | 1 |   |
+			%+---+---+---+
+			%| 4 | N | 2 |
+			%+---+---+---+
+			%|   | 3 |   |
+			%+---+---+---+
+
 			SIZE = [this.Nx, this.Ny];
 
 			[IL1,IL2] = ndgrid(1:SIZE(1),1:SIZE(2));
@@ -90,6 +127,8 @@ classdef StructuredMesh < msh.Mesh
 		end
 
 		function setDeltas(this)
+			% Generates the dx and dy vectors, which represent the dimensions
+			% of the associated volume boundary.
 			this.dx = sqrt(sum((this.coor(:, this.cn(3, :)) - this.coor(:, this.cn(4, :))).^2));
 			this.dy = sqrt(sum((this.coor(:, this.cn(2, :)) - this.coor(:, this.cn(4, :))).^2));
 			this.vol = this.dx .* this.dy;
