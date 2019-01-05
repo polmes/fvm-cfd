@@ -14,7 +14,6 @@ F = exp(-8 * pi^2 * nu * t);
 syms x y;
 uva = F * [ cos(2 * pi * x) * sin(2 * pi * y)  ;
            -cos(2 * pi * y) * sin(2 * pi * x) ];
-
 uvf = matlabFunction(uva);
 
 % Analytical convective term
@@ -34,7 +33,7 @@ L = 1; % mesh size [m]
 XY = [0 L];
 
 % Loop parameters
-NN = unique(round(logspace(log10(3), 2, 10))); % # of elements
+NN = unique(round(logspace(log10(5), 2, 10))); % # of elements
 
 %% LOOP
 
