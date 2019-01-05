@@ -1,9 +1,9 @@
 %% PRE
 
 % Init
-L = 1;
+L = 1; % mesh size [m]
 XY = [0 L];
-N = 10;
+N = 10; % # of elements
 mesh = msh.SquareMesh(XY, N);
 
 % Find middle points
