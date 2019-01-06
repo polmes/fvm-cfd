@@ -42,4 +42,6 @@ disp(['- After correction: ' num2str(norm(bcorr))]);
 
 % Plot velocity field: before & after
 util.quiver(mesh, uv, true);
+title('Velocity field before correction');
 util.quiver(mesh, uvcorr, true);
+title('Velocity field after correction');
