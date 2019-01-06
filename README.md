@@ -18,6 +18,8 @@ This is our Navier-Stokes spectro-consistent FVM CFD solver for the Master's Aer
 
 *The code has been tested using the latest MATLAB R2018b on Linux*
 
-## Cool stuff
+## Examples
 
-![Streamlines](https://github.com/polmes/fvm-cfd/raw/streamlines/gif/streams1.gif)
+![Velocity field](gif/velocity_quiver.gif)
+![Velocity streamlines](gif/velocity_streamlines.gif)
+![Pressure field](gif/pressure_contour.gif)
