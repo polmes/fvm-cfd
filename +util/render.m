@@ -1,5 +1,5 @@
-function render(mesh, t, uvt, write)	
-	% render(mesh, t, uvt, write)
+function render(mesh, t, uvt, write, plottype)
+	% render(mesh, t, uvt, write, plottype)
 	% Creates a movie from the given scalar or vector field through time.
 	% If a scalar field is given, the function util.contour() is called.
 	% If a vector field is given, the function util.quiver() is called.
@@ -9,6 +9,7 @@ function render(mesh, t, uvt, write)
 	%	t     - Time instants at which the field has been stored.
 	%	uvt   - Field to plot through time.
 	%	write - File type to render. Possible values: 'video', 'gif' or empty.
+	%	plottype - Sets which util function is called to plot the given field.
 
 	% Parameters
 	NT = length(t);
@@ -16,11 +17,18 @@ function render(mesh, t, uvt, write)
 	% Determine plot type
 	sz = size(uvt);
 	if sz(1) == 1
-		plot = @util.contour;
-		scale = [min(min(uvt)) max(max(uvt))];
+		if plottype == 1
+			plot = @util.contour;
+			plotparams = [min(min(uvt)) max(max(uvt))]; % colorbar limits
+		end
 	elseif sz(1) == 2
-		plot = @util.quiver;
-		scale = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt))));
+		if plottype==1
+			plot = @util.quiver;
+			plotparams = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt)))); % quiver scale
+		elseif plottype==2
+			plot= @util.streamlines;
+			plotparams= {2000,1}; % {number of points, length of streamline}
+		end
 	else
 		error('Wrong input field variable size.');
 	end
@@ -34,7 +42,7 @@ function render(mesh, t, uvt, write)
 	for k = 1:NT
 		cla;
 
-		plot(mesh, uvt(:, :, k), false, scale);
+		plot(mesh, uvt(:, :, k), false, plotparams);
 
 		title(['$t=' num2str(t(k), '%.2f') '\,$s'], 'Interpreter', 'latex');
 		drawnow;
@@ -46,7 +54,7 @@ function render(mesh, t, uvt, write)
 	close(progress);
 	
 	% Write
-	if nargin == 4
+	if nargin >= 4
 		disp('Saving to disk...');
 		
 		if strcmp(write, 'video')
@@ -103,8 +111,10 @@ function render(mesh, t, uvt, write)
 			else
 				disp('No filename for GIF specified. Bye-bye.');
 			end
+		elseif strcmp(write, '')
+			% Do nothing
 		else
-			error('Unknown write destination specified. Bye-bye.');
+			warning('Unknown write destination specified. Bye-bye.');
 		end
 	end
 	

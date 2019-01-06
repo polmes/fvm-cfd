@@ -88,8 +88,8 @@ close(progress);
 %% POST
 
 % Animation
-util.render(mesh, t, pt);
-util.render(mesh, t, uvt);
+util.render(mesh, t, uvt, '', 1);
+util.render(mesh, t, pt, '', 1);
 
 % Convergence of u(t), v(t) in element #1
 el = 1;

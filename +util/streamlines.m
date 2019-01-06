@@ -1,5 +1,6 @@
-function h = streamlines(mesh, uv, isNew, npoints,len)
-	
+function h = streamlines(mesh, uv, isNew, params)
+	npoints=params{1};
+	len=params{2};
 	NN=[mesh.Nx, mesh.Ny];
 	
 	X=mesh.coor(1,mesh.cn(4,:));
