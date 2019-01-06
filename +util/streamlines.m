@@ -6,8 +6,8 @@ function h = streamlines(mesh, uv, isNew, param)
 	%	mesh  - Mesh which will be used to determine the location of the nodes.
 	%	uv    - Vector field to plot.
 	%	isNew - Creates a new figure if true. Otherwise, plots on top of the currently open window.
-	%	param - Cell array with { number of points, length of streamline, ...
-	%							  line type (1: standard, 2: color), colorbar scale }.
+	%	param - Cell array with {# of points, streamline length, line type, colorbar scale}.
+	%			Line type can be: 1 (standard streamlines), 2 (colored streamlines).
 	%			Default values: {1000, 1, 1}.
 	%
 	% Return values:

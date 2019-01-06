@@ -9,9 +9,9 @@ function render(mesh, t, uvt, type, pref, write)
 	%	t     - Time instants at which the field has been stored.
 	%	uvt   - Field to plot through time.
 	%	type  - Sets which util function is called to plot the given field.
-	%			Possible values: 1 (contour/quiver), 2 (streamlines), 3 (color streamlines)
+	%			Possible values: 1 (contour/quiver), 2 (streamlines), 3 (colored streamlines).
 	%	pref  - Title prefix (e.g., 'Velocity field').
-	%	write - File type to render. Possible values: 'video', 'gif', or '' (empty).
+	%	write - File type to render. Possible values: 'video', 'gif', '' (empty).
 
 	% Parameters
 	NT = length(t);
