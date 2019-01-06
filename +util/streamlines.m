@@ -6,8 +6,9 @@ function h = streamlines(mesh, uv, isNew, param)
 	%	mesh  - Mesh which will be used to determine the location of the nodes.
 	%	uv    - Vector field to plot.
 	%	isNew - Creates a new figure if true. Otherwise, plots on top of the currently open window.
-	%	param - Cell array with {number of points, length of streamline}.
-	%			Default values: {1000, 1}.
+	%	param - Cell array with { number of points, length of streamline, ...
+	%							  line type (1: standard, 2: color), colorbar scale }.
+	%			Default values: {1000, 1, 1}.
 	%
 	% Return values:
 	%	h	  - Figure handle in which the plot has been drawn.
@@ -15,10 +16,17 @@ function h = streamlines(mesh, uv, isNew, param)
 	% Init
 	if nargin < 4
 		npoints = 1000;
-		length = 1;
+		len = 1;
+		type = 1;
 	else
 		npoints = param{1};
-		length = param{2};
+		len = param{2};
+		type = param{3};
+		if length(param) == 4
+			scale = param{4};
+		else
+			scale = [];
+		end
 	end
 	
 	% Limits
@@ -55,7 +63,18 @@ function h = streamlines(mesh, uv, isNew, param)
 	end
 	
 	% Streamline plot
-	streamline(XXX.', YYY.', UUU.', VVV.', pts(1, :), pts(2, :), [0.1 length/0.1]);
+	if type == 1
+		streamline(XXX.', YYY.', UUU.', VVV.', pts(1, :), pts(2, :), [0.1 len/0.1]);
+	elseif type == 2
+		util.streamcolor(XXX.', YYY.', UUU.', VVV.', pts(1, :), pts(2, :), sqrt(UUU.^2 + VVV.^2).', [0.1 len/0.1], scale);
+		
+		colorbar;
+		if ~isempty(scale)
+			caxis(scale);
+		end
+	else
+		error('Unknown line type for streamlines plot');
+	end
 	
 	% Grid
 	xlim(X);
