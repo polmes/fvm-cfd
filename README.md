@@ -17,3 +17,7 @@ This is our Navier-Stokes spectro-consistent FVM CFD solver for the Master's Aer
 - Periodic boundary conditions
 
 *The code has been tested using the latest MATLAB R2018b on Linux*
+
+## Cool stuff
+
+![Streamlines](https://github.com/polmes/fvm-cfd/raw/streamlines/gif/streams1.gif)
