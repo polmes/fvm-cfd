@@ -88,8 +88,8 @@ close(progress);
 %% POST
 
 % Animation
-util.render(mesh, t, uvt, '', 1);
-util.render(mesh, t, pt, '', 1);
+util.render(mesh, t, pt, 1, 'Pressure field');
+util.render(mesh, t, uvt, 1, 'Velocity field');
 
 % Convergence of u(t), v(t) in element #1
 el = 1;
@@ -100,6 +100,7 @@ plot(t, reshape(uva(1, el, :), 1, []), '-+');
 plot(t, reshape(uvt(2, el, :), 1, []), '-x');
 plot(t, reshape(uva(2, el, :), 1, []), '-+');
 grid('on');
+title(['Velocity in element #' num2str(el)]);
 xlabel('Time [s]', 'Interpreter', 'latex', 'FontSize', 15);
 ylabel('Velocity [m/s]', 'Interpreter', 'latex', 'FontSize', 15);
 legend({'$u_\mathrm{numerical}$', '$u_\mathrm{analytical}$', '$v_\mathrm{numerical}$', '$v_\mathrm{analytical}$'}, ...
@@ -116,6 +117,7 @@ loglog(h, err, 'd-', 'MarkerFaceColor', 'auto');
 loglog(h, h.^2);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 grid('on');
+title('Convergence with analytical solution');
 xlabel('Grid Size', 'Interpreter', 'latex', 'FontSize', 15);
 ylabel('Error', 'Interpreter', 'latex', 'FontSize', 15);
 legend({'Velocity', 'h^2'}, 'Location', 'northwest');
