@@ -1,5 +1,5 @@
-function render(mesh, t, uvt, write, plottype)
-	% render(mesh, t, uvt, write, plottype)
+function render(mesh, t, uvt, type, pref, write)
+	% util.render(mesh, t, uvt, type, pref, write)
 	% Creates a movie from the given scalar or vector field through time.
 	% If a scalar field is given, the function util.contour() is called.
 	% If a vector field is given, the function util.quiver() is called.
@@ -8,8 +8,10 @@ function render(mesh, t, uvt, write, plottype)
 	%	mesh  - Mesh with wich to call the corresponding plot function.
 	%	t     - Time instants at which the field has been stored.
 	%	uvt   - Field to plot through time.
-	%	write - File type to render. Possible values: 'video', 'gif' or empty.
-	%	plottype - Sets which util function is called to plot the given field.
+	%	type  - Sets which util function is called to plot the given field.
+	%			Possible values: 1 (contour/quiver), 2 (streamlines)
+	%	pref  - Title prefix (e.g., 'Velocity field').
+	%	write - File type to render. Possible values: 'video', 'gif', or '' (empty).
 
 	% Parameters
 	NT = length(t);
@@ -17,17 +19,17 @@ function render(mesh, t, uvt, write, plottype)
 	% Determine plot type
 	sz = size(uvt);
 	if sz(1) == 1
-		if plottype == 1
-			plot = @util.contour;
-			plotparams = [min(min(uvt)) max(max(uvt))]; % colorbar limits
-		end
+		plot = @util.contour;
+		parameter = [min(min(uvt)) max(max(uvt))]; % colorbar limits
 	elseif sz(1) == 2
-		if plottype==1
+		if type == 1
 			plot = @util.quiver;
-			plotparams = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt)))); % quiver scale
-		elseif plottype==2
+			parameter = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt)))); % quiver scale
+		elseif type == 2
 			plot= @util.streamlines;
-			plotparams= {2000,1}; % {number of points, length of streamline}
+			parameter = {2000, 1}; % {number of points, length of streamline}
+		else
+			error('Unknoen plot type input.');
 		end
 	else
 		error('Wrong input field variable size.');
@@ -36,15 +38,22 @@ function render(mesh, t, uvt, write, plottype)
 	% Init
 	figure;
 	M = struct('cdata', cell(1, NT), 'colormap', cell(1, NT));
+	
+	% Plot title prefix
+	if nargin >= 5 && ~isempty(pref)
+		pref = [pref ' at '];
+	else
+		pref = '';
+	end
 		
 	% Render
 	progress = waitbar(0, 'Rendering...');
 	for k = 1:NT
 		cla;
 
-		plot(mesh, uvt(:, :, k), false, plotparams);
+		plot(mesh, uvt(:, :, k), false, parameter);
 
-		title(['$t=' num2str(t(k), '%.2f') '\,$s'], 'Interpreter', 'latex');
+		title([pref '$t=' num2str(t(k), '%.2f') '\,$s'], 'Interpreter', 'latex');
 		drawnow;
 
 		M(k) = getframe(gcf);
@@ -54,7 +63,7 @@ function render(mesh, t, uvt, write, plottype)
 	close(progress);
 	
 	% Write
-	if nargin >= 4
+	if nargin == 6
 		disp('Saving to disk...');
 		
 		if strcmp(write, 'video')
@@ -111,9 +120,7 @@ function render(mesh, t, uvt, write, plottype)
 			else
 				disp('No filename for GIF specified. Bye-bye.');
 			end
-		elseif strcmp(write, '')
-			% Do nothing
-		else
+		elseif ~isempty(write)
 			warning('Unknown write destination specified. Bye-bye.');
 		end
 	end
