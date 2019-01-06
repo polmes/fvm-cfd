@@ -21,5 +21,5 @@ This is our Navier-Stokes spectro-consistent FVM CFD solver for the Master's Aer
 ## Examples
 
 ![Velocity field](gif/velocity_quiver.gif)
-![Velocity streamlines](gif/velocity_streamlines.gif)
+![Velocity streamlines](gif/velocity_streamlines_colored.gif)
 ![Pressure field](gif/pressure_contour.gif)
