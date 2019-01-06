@@ -1,5 +1,5 @@
 function h = quiver(mesh, uv, isNew, scale)
-	% h = quiver(mesh, uv, isNew, scale)
+	% h = util.quiver(mesh, uv, isNew, scale)
 	% Plots a quiver map of the vector field uv with the given mesh.
 	%
 	% Parameters:
@@ -9,7 +9,7 @@ function h = quiver(mesh, uv, isNew, scale)
 	%	scale - Scaling factor to use in the quiver. If 0, scaling is automatic.
 	%
 	% Return values:
-	%	h - figure handle in which the plot has been drawn
+	%	h	  - Figure handle in which the plot has been drawn.
 
 	% Limits
 	X = mesh.coor(1, [1 end]);
@@ -39,6 +39,7 @@ function h = quiver(mesh, uv, isNew, scale)
 		h = figure;
 	end
 	
+	% Quiver plot
 	if (nargin == 4 && scale ~= 0)
 		quiver(XX, YY, scale * UU, scale * VV, 'AutoScale', 'off');
 	else
