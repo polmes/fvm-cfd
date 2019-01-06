@@ -1,5 +1,5 @@
 function h = contour(mesh, p, isNew, scale)
-	% h = contour(mesh, p, isNew, scale)
+	% h = util.contour(mesh, p, isNew, scale)
 	% Plots a colored map of the scalar field p with the given mesh.
 	%
 	% Parameters:
@@ -9,7 +9,7 @@ function h = contour(mesh, p, isNew, scale)
 	%	scale - Determines the colorbar scale
 	%
 	% Return values:
-	%	h - figure handle in which the plot has been drawn
+	%	h	  - Figure handle in which the plot has been drawn.
 
 	% Limits
 	X = mesh.coor(1, [1 end]);

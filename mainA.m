@@ -106,6 +106,7 @@ loglog(h(indd), errd(indd), 'v-', 'MarkerFaceColor', 'auto');
 loglog(h, h.^2);
 set(gca, 'XScale', 'log', 'YScale', 'log');
 grid('on');
+title('Convergence with analytical solution');
 xlabel('Grid Size', 'Interpreter', 'latex', 'FontSize', 15);
 ylabel('Error', 'Interpreter', 'latex', 'FontSize', 15);
 legend({'Convective', 'Diffusive', 'h^2'}, 'Location', 'northwest');
