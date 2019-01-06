@@ -9,9 +9,9 @@ function render(mesh, t, uvt, type, pref, write)
 	%	t     - Time instants at which the field has been stored.
 	%	uvt   - Field to plot through time.
 	%	type  - Sets which util function is called to plot the given field.
-	%			Possible values: 1 (contour/quiver), 2 (streamlines)
+	%			Possible values: 1 (contour/quiver), 2 (streamlines), 3 (colored streamlines).
 	%	pref  - Title prefix (e.g., 'Velocity field').
-	%	write - File type to render. Possible values: 'video', 'gif', or '' (empty).
+	%	write - File type to render. Possible values: 'video', 'gif', '' (empty).
 
 	% Parameters
 	NT = length(t);
@@ -27,9 +27,13 @@ function render(mesh, t, uvt, type, pref, write)
 			parameter = min([mesh.dx mesh.dy]) / max(max(max(abs(uvt)))); % quiver scale
 		elseif type == 2
 			plot= @util.streamlines;
-			parameter = {2000, 1}; % {number of points, length of streamline}
+			parameter = {2000, 1, 1}; % standard streamline with 2000 points
+		elseif type == 3
+			plot = @util.streamlines;
+			uvmag = sqrt(sum(uvt.^2, 1));
+			parameter = {1000, 1, 2, [min(min(uvmag)) max(max(uvmag))]}; % colored streamline with 1000 points
 		else
-			error('Unknoen plot type input.');
+			error('Unknown plot type input.');
 		end
 	else
 		error('Wrong input field variable size.');
@@ -41,7 +45,7 @@ function render(mesh, t, uvt, type, pref, write)
 	
 	% Plot title prefix
 	if nargin >= 5 && ~isempty(pref)
-		pref = [pref ' at '];
+		pref = [pref ' at '];	
 	else
 		pref = '';
 	end
